@@ -56,11 +56,11 @@ export default class BootScene extends Phaser.Scene {
       frameHeight: 64
     });
 
-    // Load LPC Goblin sprite sheet (64x64 frames, full animation set)
+    // Load LPC Goblin sprite sheet (trying 48x48 frames)
     console.log('📦 Loading LPC goblin sprite from:', lpcPath + 'goblin.png');
     this.load.spritesheet('goblin', lpcPath + 'goblin.png', {
-      frameWidth: 64,
-      frameHeight: 64
+      frameWidth: 48,
+      frameHeight: 48
     });
 
     // Load environment tilesets from Cainos pack (original graphics)
