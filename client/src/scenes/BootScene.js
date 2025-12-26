@@ -49,12 +49,11 @@ export default class BootScene extends Phaser.Scene {
     const lpcPath = 'assets/lpc/';
     const tilesetsPath = 'assets/tilesets/';
 
-    // Load character sprite sheets (64x64 LPC format)
-    // Use clean body sprite - player_spritesheet.png has green background baked in
-    console.log('📦 Loading LPC player sprite from:', lpcPath + 'player_body_clean.png');
-    this.load.spritesheet('player', lpcPath + 'player_body_clean.png', {
-      frameWidth: 64,
-      frameHeight: 64
+    // Load character sprite sheets (32x32 Cainos format - simpler, no green background)
+    console.log('📦 Loading Cainos player sprite from:', tilesetsPath + 'player.png');
+    this.load.spritesheet('player', tilesetsPath + 'player.png', {
+      frameWidth: 32,
+      frameHeight: 32
     });
 
     console.log('📦 Loading LPC goblin sprite from:', lpcPath + 'goblin.png');
@@ -78,47 +77,36 @@ export default class BootScene extends Phaser.Scene {
   }
 
   create() {
-    // Create player animations for LPC sprite sheet
-    // Standard LPC format: 13 columns x 46 rows
-    // Rows 8-11 contain walk animations (9 frames each)
-    // Row 8: Walk up
-    // Row 9: Walk left
-    // Row 10: Walk down
-    // Row 11: Walk right
-
-    // Walking animations - 9 frames per direction
+    // Create player animations for Cainos sprite sheet
+    // Cainos format: 4 frames (down, left, right, up) - simple static sprites
+    // For now just use frame 0 (down) for all animations
     this.anims.create({
       key: 'player_walk_up',
-      frames: this.anims.generateFrameNumbers('player', { start: 104, end: 112 }),
-      frameRate: 10,
-      repeat: -1
+      frames: [{ key: 'player', frame: 3 }],
+      frameRate: 1
     });
 
     this.anims.create({
       key: 'player_walk_left',
-      frames: this.anims.generateFrameNumbers('player', { start: 117, end: 125 }),
-      frameRate: 10,
-      repeat: -1
+      frames: [{ key: 'player', frame: 1 }],
+      frameRate: 1
     });
 
     this.anims.create({
       key: 'player_walk_down',
-      frames: this.anims.generateFrameNumbers('player', { start: 130, end: 138 }),
-      frameRate: 10,
-      repeat: -1
+      frames: [{ key: 'player', frame: 0 }],
+      frameRate: 1
     });
 
     this.anims.create({
       key: 'player_walk_right',
-      frames: this.anims.generateFrameNumbers('player', { start: 143, end: 151 }),
-      frameRate: 10,
-      repeat: -1
+      frames: [{ key: 'player', frame: 2 }],
+      frameRate: 1
     });
 
-    // Idle animation (use middle frame of walk down for stable idle pose)
     this.anims.create({
       key: 'player_idle_down',
-      frames: [{ key: 'player', frame: 134 }],
+      frames: [{ key: 'player', frame: 0 }],
       frameRate: 1
     });
 
