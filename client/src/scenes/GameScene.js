@@ -431,13 +431,13 @@ export default class GameScene extends Phaser.Scene {
     this.player.setCollideWorldBounds(true);
     this.player.setDepth(10); // Ensure player is above ground
 
-    // Set scale to 0.5 to make the 64x64 sprite appear as 32x32
-    this.player.setScale(0.5);
+    // LPC sprites are 64x64, keep at full scale for proper visibility
+    this.player.setScale(1);
 
     console.log('✅ Player sprite created, frame count:', this.player.texture.frameTotal);
 
-    // Name tag
-    this.player.nameText = this.add.text(this.player.x, this.player.y - 30, playerData.username || 'Player', {
+    // Name tag (adjusted offset for full-scale sprite)
+    this.player.nameText = this.add.text(this.player.x, this.player.y - 40, playerData.username || 'Player', {
       font: 'bold 12px Arial',
       fill: '#ffffff',
       stroke: '#000000',
@@ -453,9 +453,10 @@ export default class GameScene extends Phaser.Scene {
   createOtherPlayer(playerData) {
     const otherPlayer = this.add.sprite(playerData.x, playerData.y, 'player');
     otherPlayer.setTint(0xaaaaff);
+    otherPlayer.setScale(1); // Match main player scale
 
-    // Name tag
-    otherPlayer.nameText = this.add.text(playerData.x, playerData.y - 30, playerData.username, {
+    // Name tag (adjusted offset for full-scale sprite)
+    otherPlayer.nameText = this.add.text(playerData.x, playerData.y - 40, playerData.username, {
       font: 'bold 12px Arial',
       fill: '#ffff00',
       stroke: '#000000',
@@ -621,8 +622,8 @@ export default class GameScene extends Phaser.Scene {
       console.warn('Animation error:', err);
     }
 
-    // Update name tag position
-    this.player.nameText.setPosition(this.player.x, this.player.y - 30);
+    // Update name tag position (adjusted for full-scale sprite)
+    this.player.nameText.setPosition(this.player.x, this.player.y - 40);
 
     // Emit position to server (throttled to every 100ms)
     if (time - this.lastMoveEmit > 100 && (velocityX !== 0 || velocityY !== 0)) {
@@ -632,7 +633,7 @@ export default class GameScene extends Phaser.Scene {
 
     // Update other players' name tags and health bars
     this.otherPlayers.forEach((otherPlayer) => {
-      otherPlayer.nameText.setPosition(otherPlayer.x, otherPlayer.y - 30);
+      otherPlayer.nameText.setPosition(otherPlayer.x, otherPlayer.y - 40);
     });
 
     // Update monsters
