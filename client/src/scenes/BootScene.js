@@ -102,27 +102,8 @@ export default class BootScene extends Phaser.Scene {
   }
 
   createPlaceholderAssets() {
-    // Create placeholder graphics - simple pixel-art style
-    // These will be replaced with actual sprite sheets later
-
-    // Player placeholder - blue character with face
-    const playerGraphics = this.add.graphics();
-    // Body
-    playerGraphics.fillStyle(0x3498db);
-    playerGraphics.fillRect(8, 12, 16, 16);
-    // Head
-    playerGraphics.fillStyle(0xffd699);
-    playerGraphics.fillRect(10, 6, 12, 10);
-    // Eyes
-    playerGraphics.fillStyle(0x000000);
-    playerGraphics.fillRect(12, 10, 2, 2);
-    playerGraphics.fillRect(18, 10, 2, 2);
-    // Legs
-    playerGraphics.fillStyle(0x2c3e50);
-    playerGraphics.fillRect(10, 28, 5, 4);
-    playerGraphics.fillRect(17, 28, 5, 4);
-    playerGraphics.generateTexture('player', 32, 32);
-    playerGraphics.destroy();
+    // Create placeholder graphics for items not in the Cainos pack
+    // Note: Player sprite is now loaded from the actual sprite sheet, not generated here
 
     // Monster placeholder - red goblin-like creature
     const monsterGraphics = this.add.graphics();
