@@ -40,13 +40,64 @@ export default class BootScene extends Phaser.Scene {
       percentText.destroy();
     });
 
-    // Load placeholder assets (will be replaced with actual pixel art)
-    // For now, we'll create simple colored rectangles as placeholders
+    // Load Cainos pixel art assets
+    const assetPath = 'assets/sprites/Pixel Art Top Down - Basic v1.2.2/Texture/';
+
+    // Load sprite sheets
+    this.load.spritesheet('player', assetPath + 'TX Player.png', {
+      frameWidth: 32,
+      frameHeight: 32
+    });
+
+    this.load.image('tileset_grass', assetPath + 'TX Tileset Grass.png');
+    this.load.image('tileset_stone', assetPath + 'TX Tileset Stone Ground.png');
+    this.load.image('tileset_wall', assetPath + 'TX Tileset Wall.png');
+    this.load.image('plants', assetPath + 'TX Plant.png');
+    this.load.image('props', assetPath + 'TX Props.png');
+    this.load.image('struct', assetPath + 'TX Struct.png');
+    this.load.image('shadow', assetPath + 'TX Shadow.png');
+
+    // Still create some placeholder graphics for items not in the pack
     this.createPlaceholderAssets();
   }
 
   create() {
-    console.log('✅ Boot scene complete');
+    // Create player animations from the sprite sheet
+    this.anims.create({
+      key: 'player_idle_down',
+      frames: [{ key: 'player', frame: 0 }],
+      frameRate: 1
+    });
+
+    this.anims.create({
+      key: 'player_walk_down',
+      frames: this.anims.generateFrameNumbers('player', { start: 0, end: 1 }),
+      frameRate: 8,
+      repeat: -1
+    });
+
+    this.anims.create({
+      key: 'player_walk_up',
+      frames: this.anims.generateFrameNumbers('player', { start: 4, end: 5 }),
+      frameRate: 8,
+      repeat: -1
+    });
+
+    this.anims.create({
+      key: 'player_walk_left',
+      frames: this.anims.generateFrameNumbers('player', { start: 8, end: 9 }),
+      frameRate: 8,
+      repeat: -1
+    });
+
+    this.anims.create({
+      key: 'player_walk_right',
+      frames: this.anims.generateFrameNumbers('player', { start: 12, end: 13 }),
+      frameRate: 8,
+      repeat: -1
+    });
+
+    console.log('✅ Boot scene complete, Cainos pixel art loaded');
     this.scene.start('LoginScene');
   }
 
