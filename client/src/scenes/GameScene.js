@@ -1,6 +1,7 @@
 import { GAME_WIDTH, GAME_HEIGHT, PLAYER_SPEED, COLORS } from '../utils/Constants.js';
 import socketManager from '../network/SocketManager.js';
 import Monster from '../entities/Monster.js';
+import GroundItem from '../entities/GroundItem.js';
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -12,6 +13,7 @@ export default class GameScene extends Phaser.Scene {
     this.trees = new Map();
     this.fishingSpots = new Map();
     this.fires = new Map();
+    this.groundItems = new Map();
     this.cursors = null;
     this.lastMoveEmit = 0;
     this.playerData = null;
@@ -53,102 +55,38 @@ export default class GameScene extends Phaser.Scene {
     grassTilesprite.setOrigin(0, 0);
     grassTilesprite.setDepth(-1);
 
-    // Keep graphics for other elements
-    const graphics = this.add.graphics();
-
-    // River with flowing water pattern
-    const riverY = 180;
-    const riverHeight = 80;
-    graphics.fillStyle(0x42a5f5, 1);
-    graphics.fillRect(200, riverY, 400, riverHeight);
-    // Water highlights
-    graphics.fillStyle(0x64b5f6, 0.6);
-    for (let i = 0; i < 20; i++) {
-      graphics.fillRect(200 + Math.random() * 400, riverY + Math.random() * riverHeight,
-                       10 + Math.random() * 20, 3);
-    }
-    // River banks (darker)
-    graphics.fillStyle(0x5d4037, 1);
-    graphics.fillRect(200, riverY - 4, 400, 4);
-    graphics.fillRect(200, riverY + riverHeight, 400, 4);
-
-    // Town buildings
+    // Stone paths using Cainos tileset
     const townX = 100;
     const townY = 80;
+    const pathTilesprite = this.add.tileSprite(townX + 40, townY, 200, 160, 'tileset_stone');
+    pathTilesprite.setOrigin(0, 0);
 
-    // Stone paths in town
-    graphics.fillStyle(0x9e9e9e, 1);
-    graphics.fillRect(townX + 40, townY, 200, 16);
-    graphics.fillRect(townX + 40, townY + 80, 200, 16);
-    graphics.fillRect(townX + 40, townY, 16, 160);
-    graphics.fillRect(townX + 224, townY, 16, 160);
+    // River area using tileset_wall (simplified - using wall texture tinted blue)
+    const riverY = 180;
+    const wallTilesprite = this.add.tileSprite(200, riverY, 400, 80, 'tileset_wall');
+    wallTilesprite.setOrigin(0, 0);
+    wallTilesprite.setTint(0x42a5f5); // Tint blue for river
+    wallTilesprite.setAlpha(0.7);
 
-    // Path texture
-    graphics.fillStyle(0x757575, 1);
-    for (let i = 0; i < 30; i++) {
-      const px = townX + 40 + Math.random() * 200;
-      const py = townY + Math.random() * 160;
-      graphics.fillRect(px, py, 2, 2);
-    }
+    // Buildings using struct sprite
+    // Note: The struct sprite contains building pieces, we'll place them as simple images
+    // Building positions
+    this.add.image(townX + 90, townY + 45, 'struct').setScale(2);
+    this.add.image(townX + 190, townY + 45, 'struct').setScale(2);
+    this.add.image(townX + 140, townY + 125, 'struct').setScale(2);
 
-    // Building 1 (left)
-    graphics.fillStyle(0x8d6e63, 1);
-    graphics.fillRect(townX + 60, townY + 20, 60, 50);
-    graphics.fillStyle(0x6d4c41, 1); // roof
-    graphics.fillRect(townX + 55, townY + 10, 70, 15);
-    graphics.fillStyle(0x5d4037, 1); // door
-    graphics.fillRect(townX + 80, townY + 45, 20, 25);
-    graphics.fillStyle(0xffeb3b, 1); // windows
-    graphics.fillRect(townX + 70, townY + 30, 10, 10);
-    graphics.fillRect(townX + 95, townY + 30, 10, 10);
-
-    // Building 2 (right)
-    graphics.fillStyle(0x8d6e63, 1);
-    graphics.fillRect(townX + 160, townY + 20, 60, 50);
-    graphics.fillStyle(0x6d4c41, 1);
-    graphics.fillRect(townX + 155, townY + 10, 70, 15);
-    graphics.fillStyle(0x5d4037, 1);
-    graphics.fillRect(townX + 180, townY + 45, 20, 25);
-    graphics.fillStyle(0xffeb3b, 1);
-    graphics.fillRect(townX + 170, townY + 30, 10, 10);
-    graphics.fillRect(townX + 195, townY + 30, 10, 10);
-
-    // Building 3 (bottom)
-    graphics.fillStyle(0x8d6e63, 1);
-    graphics.fillRect(townX + 110, townY + 100, 60, 50);
-    graphics.fillStyle(0x6d4c41, 1);
-    graphics.fillRect(townX + 105, townY + 90, 70, 15);
-    graphics.fillStyle(0x5d4037, 1);
-    graphics.fillRect(townX + 130, townY + 125, 20, 25);
-    graphics.fillStyle(0xffeb3b, 1);
-    graphics.fillRect(townX + 120, townY + 110, 10, 10);
-    graphics.fillRect(townX + 145, townY + 110, 10, 10);
-
-    // Farm area with tilled soil
+    // Farm area using tileset_stone for soil
     const farmX = 500;
     const farmY = 320;
+    const farmTilesprite = this.add.tileSprite(farmX, farmY, 280, 260, 'tileset_stone');
+    farmTilesprite.setOrigin(0, 0);
+    farmTilesprite.setTint(0x8d6e63); // Tint it brown for soil effect
 
-    // Dirt/soil base
-    graphics.fillStyle(0x8d6e63, 1);
-    graphics.fillRect(farmX, farmY, 280, 260);
+    // Simple graphics for remaining elements
+    const graphics = this.add.graphics();
 
-    // Crop rows (tilled soil)
-    graphics.fillStyle(0x6d4c41, 1);
-    for (let row = 0; row < 8; row++) {
-      graphics.fillRect(farmX + 20, farmY + 20 + (row * 30), 240, 16);
-    }
-
-    // Crop texture (small plants)
-    graphics.fillStyle(0x558b2f, 1);
-    for (let i = 0; i < 60; i++) {
-      const cx = farmX + 20 + Math.random() * 240;
-      const cy = farmY + 20 + Math.random() * 240;
-      graphics.fillRect(cx, cy, 3, 4);
-    }
-
-    // Farm fence
+    // Farm fence (keep simple)
     graphics.fillStyle(0x5d4037, 1);
-    // Top fence
     for (let i = 0; i < 9; i++) {
       graphics.fillRect(farmX + (i * 32), farmY - 8, 4, 12);
     }
@@ -165,33 +103,21 @@ export default class GameScene extends Phaser.Scene {
       graphics.fillRect(farmX + 280, farmY + (i * 32), 12, 4);
     }
 
-    // Path from town to farm
-    graphics.fillStyle(0x9e9e9e, 1);
-    graphics.fillRect(240, 240, 16, 80);
-    graphics.fillRect(240, 320, 260, 16);
+    // Path from town to farm using tileset
+    const pathToFarm1 = this.add.tileSprite(240, 240, 16, 80, 'tileset_stone');
+    pathToFarm1.setOrigin(0, 0);
+    const pathToFarm2 = this.add.tileSprite(240, 320, 260, 16, 'tileset_stone');
+    pathToFarm2.setOrigin(0, 0);
 
-    // Path stones
-    graphics.fillStyle(0x757575, 1);
-    for (let i = 0; i < 40; i++) {
-      const px = 240 + Math.random() * 260;
-      const py = 240 + Math.random() * 96;
-      graphics.fillRect(px, py, 2, 2);
-    }
-
-    // Add some decorative flowers around the map
-    const flowerColors = [0xff1744, 0xe91e63, 0x9c27b0, 0xffeb3b];
-    for (let i = 0; i < 30; i++) {
+    // Add decorative plants using Cainos plants sprite
+    for (let i = 0; i < 20; i++) {
       const fx = Math.random() * GAME_WIDTH;
       const fy = Math.random() * GAME_HEIGHT;
-      // Don't put flowers on paths, buildings, river, or farm
+      // Don't put plants on paths, buildings, river, or farm
       if (fx < 100 || fx > 480 || (fy > 180 && fy < 260) || (fx > 500 && fy > 320)) {
         continue;
       }
-      const color = flowerColors[Math.floor(Math.random() * flowerColors.length)];
-      graphics.fillStyle(color, 1);
-      graphics.fillCircle(fx, fy, 3);
-      graphics.fillStyle(0x558b2f, 1);
-      graphics.fillRect(fx - 1, fy + 2, 2, 4);
+      this.add.image(fx, fy, 'plants').setScale(0.5);
     }
 
     // Add text labels
@@ -247,6 +173,11 @@ export default class GameScene extends Phaser.Scene {
       // Create fires
       data.fires.forEach((fireData) => {
         this.createFire(fireData);
+      });
+
+      // Create ground items
+      data.groundItems.forEach((groundItemData) => {
+        this.createGroundItem(groundItemData);
       });
     });
 
@@ -394,6 +325,20 @@ export default class GameScene extends Phaser.Scene {
         // UI scene will handle displaying this
       }
     });
+
+    // Ground item spawned
+    this.socketManager.on('groundItemSpawned', (data) => {
+      this.createGroundItem(data);
+    });
+
+    // Ground item picked up
+    this.socketManager.on('groundItemPickedUp', (data) => {
+      const groundItem = this.groundItems.get(data.groundItemId);
+      if (groundItem) {
+        groundItem.destroy();
+        this.groundItems.delete(data.groundItemId);
+      }
+    });
   }
 
   createPlayer(playerData) {
@@ -484,6 +429,11 @@ export default class GameScene extends Phaser.Scene {
   createFire(fireData) {
     const fire = this.add.sprite(fireData.x, fireData.y, 'fire');
     this.fires.set(fireData.id, fire);
+  }
+
+  createGroundItem(groundItemData) {
+    const groundItem = new GroundItem(this, groundItemData);
+    this.groundItems.set(groundItemData.id, groundItem);
   }
 
   showMessage(text, color) {
