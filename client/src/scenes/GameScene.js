@@ -55,10 +55,10 @@ export default class GameScene extends Phaser.Scene {
     const graphics = this.add.graphics();
     graphics.setDepth(0.5); // Above water (0) but below fishing spots (1) - for buildings, farm, decorations
 
-    // River with water tileset
-    const riverY = 180;
+    // River with water tileset (moved down to avoid town overlap)
+    const riverY = 280;
     const riverHeight = 80;
-    const riverX = 200;
+    const riverX = 100;
     const riverWidth = 400;
 
     // Create water using tileset (32x32 tiles)
@@ -168,7 +168,7 @@ export default class GameScene extends Phaser.Scene {
       const fx = Math.random() * GAME_WIDTH;
       const fy = Math.random() * GAME_HEIGHT;
       // Don't put flowers on paths, buildings, river, or farm
-      if (fx < 100 || fx > 480 || (fy > 180 && fy < 260) || (fx > 500 && fy > 320)) {
+      if (fx < 100 || fx > 480 || (fy > 280 && fy < 360) || (fx > 500 && fy > 320)) {
         continue;
       }
       const color = flowerColors[Math.floor(Math.random() * flowerColors.length)];
