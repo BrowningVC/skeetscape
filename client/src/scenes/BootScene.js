@@ -45,10 +45,11 @@ export default class BootScene extends Phaser.Scene {
       console.error('❌ Failed to load:', file.src);
     });
 
-    // Load LPC (Liberated Pixel Cup) assets - OSRS-style pixel art
+    // Load LPC (Liberated Pixel Cup) character sprites - OSRS-style pixel art
     const lpcPath = 'assets/lpc/';
+    const cainosPath = 'assets/sprites/Pixel Art Top Down - Basic v1.2.2/Texture/';
 
-    // Load sprite sheets (64x64 LPC format)
+    // Load character sprite sheets (64x64 LPC format)
     console.log('📦 Loading LPC player sprite from:', lpcPath + 'player_spritesheet.png');
     this.load.spritesheet('player', lpcPath + 'player_spritesheet.png', {
       frameWidth: 64,
@@ -61,8 +62,14 @@ export default class BootScene extends Phaser.Scene {
       frameHeight: 64
     });
 
-    // Load tilesets and environment sprites
-    this.load.image('tileset_grass', lpcPath + 'tileset_grass.png');
+    // Load environment tilesets from Cainos pack (original graphics)
+    console.log('📦 Loading Cainos grass tileset from:', cainosPath + 'TX Tileset Grass.png');
+    this.load.image('tileset_grass', cainosPath + 'TX Tileset Grass.png');
+
+    console.log('📦 Loading Cainos stone tileset from:', cainosPath + 'TX Tileset Stone Ground.png');
+    this.load.image('tileset_stone', cainosPath + 'TX Tileset Stone Ground.png');
+
+    // Load tree from LPC
     this.load.image('tree', lpcPath + 'tree.png');
 
     // Create placeholder graphics for items not yet in LPC pack
