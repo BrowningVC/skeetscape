@@ -22,10 +22,13 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
     }
 
     // Set up sprite - goblins are 64x64 LPC sprites
-    this.setScale(1); // Full size (64x64)
+    this.setScale(1.5); // Slightly larger to ensure visibility
     this.setDepth(5); // Ensure monsters render above ground
     this.setInteractive();
     this.setOrigin(0.5, 0.5);
+
+    // Temporary debug: add slight tint to ensure visibility
+    this.setTint(0xffffff);
 
     // Play idle animation (goblin facing down)
     if (scene.anims.exists('goblin_idle')) {
@@ -41,8 +44,15 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
       visible: this.visible,
       alpha: this.alpha,
       scale: this.scale,
-      frame: this.frame.name,
-      texture: this.texture.key
+      scaleX: this.scaleX,
+      scaleY: this.scaleY,
+      depth: this.depth,
+      frame: this.frame?.name,
+      texture: this.texture.key,
+      width: this.width,
+      height: this.height,
+      displayWidth: this.displayWidth,
+      displayHeight: this.displayHeight
     });
 
     // Create health bar
