@@ -31,7 +31,8 @@
       "Bash(railway logs:*)",
       "Bash(railway service)",
       "Bash(railway whoami:*)",
-      "Bash(gh repo view:*)"
+      "Bash(gh repo view:*)",
+      "Bash(sips:*)"
     ]
   }
 }

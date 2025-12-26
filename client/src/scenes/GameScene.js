@@ -457,6 +457,20 @@ export default class GameScene extends Phaser.Scene {
       }
     });
 
+    // Player hit by monster (play monster attack animation)
+    this.socketManager.on('playerHit', (data) => {
+      const monster = this.monsters.get(data.monsterId);
+      if (monster) {
+        // Play attack animation
+        monster.play('goblin_slash_down', true);
+
+        // Return to idle after animation completes
+        monster.once('animationcomplete', () => {
+          monster.play('goblin_idle', true);
+        });
+      }
+    });
+
     // Player died
     this.socketManager.on('playerDied', (data) => {
       if (this.player) {
@@ -479,6 +493,7 @@ export default class GameScene extends Phaser.Scene {
 
     // Ground item spawned
     this.socketManager.on('groundItemSpawned', (data) => {
+      console.log('📦 Ground item spawned event received:', data);
       this.createGroundItem(data);
     });
 
@@ -607,8 +622,10 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createGroundItem(groundItemData) {
+    console.log('🎁 Creating ground item:', groundItemData);
     const groundItem = new GroundItem(this, groundItemData);
     this.groundItems.set(groundItemData.id, groundItem);
+    console.log('✅ Ground item created and added to map');
   }
 
   showPlayerHitsplat(damage) {

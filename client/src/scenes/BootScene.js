@@ -56,11 +56,11 @@ export default class BootScene extends Phaser.Scene {
       frameHeight: 64
     });
 
-    // Load LPC Goblin sprite sheet (trying 48x48 frames)
+    // Load LPC Goblin sprite sheet (704x320, 64x64 frames, 11x5 grid = 55 frames)
     console.log('📦 Loading LPC goblin sprite from:', lpcPath + 'goblin.png');
     this.load.spritesheet('goblin', lpcPath + 'goblin.png', {
-      frameWidth: 48,
-      frameHeight: 48
+      frameWidth: 64,
+      frameHeight: 64
     });
 
     // Load environment tilesets from Cainos pack (original graphics)
@@ -124,71 +124,72 @@ export default class BootScene extends Phaser.Scene {
       frameRate: 1
     });
 
-    // Goblin animations (LPC format: 96 columns x 16 rows = 1536 frames)
-    // Row 8-11 contain walk animations (like player)
-    // Row 8: Walk up, Row 9: Walk left, Row 10: Walk down, Row 11: Walk right
-    // Each animation is 9 frames
+    // Goblin animations (LPC format: 11 columns x 5 rows = 55 frames)
+    // Row 0 (0-10): Spellcast up
+    // Row 1 (11-21): Walk down
+    // Row 2 (22-32): Walk left
+    // Row 3 (33-43): Walk right
+    // Row 4 (44-48): Death/hurt
 
     this.anims.create({
-      key: 'goblin_walk_up',
-      frames: this.anims.generateFrameNumbers('goblin', { start: 768, end: 776 }),
+      key: 'goblin_walk_down',
+      frames: this.anims.generateFrameNumbers('goblin', { start: 11, end: 19 }),
       frameRate: 10,
       repeat: -1
     });
 
     this.anims.create({
       key: 'goblin_walk_left',
-      frames: this.anims.generateFrameNumbers('goblin', { start: 864, end: 872 }),
-      frameRate: 10,
-      repeat: -1
-    });
-
-    this.anims.create({
-      key: 'goblin_walk_down',
-      frames: this.anims.generateFrameNumbers('goblin', { start: 960, end: 968 }),
+      frames: this.anims.generateFrameNumbers('goblin', { start: 22, end: 30 }),
       frameRate: 10,
       repeat: -1
     });
 
     this.anims.create({
       key: 'goblin_walk_right',
-      frames: this.anims.generateFrameNumbers('goblin', { start: 1056, end: 1064 }),
+      frames: this.anims.generateFrameNumbers('goblin', { start: 33, end: 41 }),
+      frameRate: 10,
+      repeat: -1
+    });
+
+    this.anims.create({
+      key: 'goblin_walk_up',
+      frames: this.anims.generateFrameNumbers('goblin', { start: 0, end: 8 }),
       frameRate: 10,
       repeat: -1
     });
 
     this.anims.create({
       key: 'goblin_idle',
-      frames: this.anims.generateFrameNumbers('goblin', { start: 960, end: 968 }),
-      frameRate: 2, // Very slow animation for idle
-      repeat: -1
+      frames: [{ key: 'goblin', frame: 15 }], // Middle frame of walk down animation
+      frameRate: 1
     });
 
-    // Goblin slash animations (Row 12-15: Slash up, left, down, right)
+    // Slash animations - using spellcast animation for attack (row 0)
     this.anims.create({
-      key: 'goblin_slash_up',
-      frames: this.anims.generateFrameNumbers('goblin', { start: 1152, end: 1157 }),
+      key: 'goblin_slash_down',
+      frames: this.anims.generateFrameNumbers('goblin', { start: 0, end: 6 }),
       frameRate: 12,
       repeat: 0
     });
 
     this.anims.create({
       key: 'goblin_slash_left',
-      frames: this.anims.generateFrameNumbers('goblin', { start: 1248, end: 1253 }),
-      frameRate: 12,
-      repeat: 0
-    });
-
-    this.anims.create({
-      key: 'goblin_slash_down',
-      frames: this.anims.generateFrameNumbers('goblin', { start: 1344, end: 1349 }),
+      frames: this.anims.generateFrameNumbers('goblin', { start: 0, end: 6 }),
       frameRate: 12,
       repeat: 0
     });
 
     this.anims.create({
       key: 'goblin_slash_right',
-      frames: this.anims.generateFrameNumbers('goblin', { start: 1440, end: 1445 }),
+      frames: this.anims.generateFrameNumbers('goblin', { start: 0, end: 6 }),
+      frameRate: 12,
+      repeat: 0
+    });
+
+    this.anims.create({
+      key: 'goblin_slash_up',
+      frames: this.anims.generateFrameNumbers('goblin', { start: 0, end: 6 }),
       frameRate: 12,
       repeat: 0
     });
@@ -196,9 +197,8 @@ export default class BootScene extends Phaser.Scene {
     // Keep placeholder for backward compatibility
     this.anims.create({
       key: 'monster_idle',
-      frames: this.anims.generateFrameNumbers('goblin', { start: 960, end: 968 }),
-      frameRate: 2,
-      repeat: -1
+      frames: [{ key: 'goblin', frame: 15 }],
+      frameRate: 1
     });
 
     // Debug: Check if sprites loaded correctly

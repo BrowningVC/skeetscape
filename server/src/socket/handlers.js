@@ -143,9 +143,11 @@ module.exports = {
       io.emit('monsterKilled', { monsterId: monster.id });
 
       if (result.loot) {
+        console.log('💎 Loot dropped:', result.loot);
         const added = ItemSystem.addToInventory(player, result.loot);
 
         if (added) {
+          console.log('✅ Loot added to inventory');
           socket.emit('inventoryUpdate', { inventory: player.inventory });
           socket.emit('lootReceived', {
             item: result.loot,
@@ -153,6 +155,7 @@ module.exports = {
           });
         } else {
           // Drop item on ground at monster's position
+          console.log('📦 Dropping loot on ground at', monster.x, monster.y);
           const groundItemId = gameState.addGroundItem(
             result.loot.item_id,
             result.loot.quantity,
@@ -160,10 +163,13 @@ module.exports = {
             monster.y
           );
           const groundItem = gameState.getGroundItem(groundItemId);
+          console.log('📦 Ground item created:', groundItem);
 
           io.emit('groundItemSpawned', groundItem);
           socket.emit('message', { text: 'Inventory full! Item dropped on ground.' });
         }
+      } else {
+        console.log('❌ No loot dropped from monster');
       }
     }
 

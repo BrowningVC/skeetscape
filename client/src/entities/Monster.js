@@ -22,7 +22,7 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
     }
 
     // Set up sprite - goblins are 64x64 LPC sprites
-    this.setScale(1.5); // Slightly larger to ensure visibility
+    this.setScale(0.75); // 50% smaller than default
     this.setDepth(5); // Ensure monsters render above ground
     this.setInteractive();
     this.setOrigin(0.5, 0.5);
@@ -206,7 +206,7 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
     // Reset visuals
     this.setVisible(true);
     this.setAlpha(1);
-    this.setScale(1);
+    this.setScale(0.75);
     this.clearTint();
 
     // Show health bars
