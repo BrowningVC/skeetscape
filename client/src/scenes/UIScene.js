@@ -10,10 +10,15 @@ export default class UIScene extends Phaser.Scene {
   }
 
   create() {
+    // Create UI elements immediately so they're always visible
+    this.createUIElements();
+
     // Set up socket listener for player data
     socketManager.on('init', (data) => {
       this.playerData = data.player;
-      this.createUI();
+      // Update all UI elements with actual data
+      this.updateHealthBar();
+      this.updateSkillsPanel();
     });
 
     // Listen for updates
@@ -52,7 +57,7 @@ export default class UIScene extends Phaser.Scene {
     });
   }
 
-  createUI() {
+  createUIElements() {
     // Health bar
     const hpX = 10;
     const hpY = 10;
@@ -65,13 +70,11 @@ export default class UIScene extends Phaser.Scene {
 
     this.healthBar = this.add.graphics();
 
-    this.healthText = this.add.text(hpX + hpWidth / 2, hpY + hpHeight / 2, '', {
+    this.healthText = this.add.text(hpX + hpWidth / 2, hpY + hpHeight / 2, 'Loading...', {
       font: '12px Arial',
       fill: '#ffffff'
     });
     this.healthText.setOrigin(0.5);
-
-    this.updateHealthBar();
 
     // Skills panel
     this.createSkillsPanel();
@@ -119,8 +122,8 @@ export default class UIScene extends Phaser.Scene {
         strokeThickness: 2
       });
 
-      // Level text
-      this.skillTexts[skill] = this.add.text(startX, y + 18, '', {
+      // Level text - show placeholder initially
+      this.skillTexts[skill] = this.add.text(startX, y + 18, 'Loading...', {
         font: '12px Arial',
         fill: '#ffff00',
         stroke: '#000000',
@@ -128,9 +131,7 @@ export default class UIScene extends Phaser.Scene {
       });
     });
 
-    this.updateSkillsPanel();
-
-    // Create HUD buttons
+    // Create HUD buttons (always visible)
     this.createHUDButtons();
   }
 
