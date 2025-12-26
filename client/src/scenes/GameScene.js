@@ -79,7 +79,7 @@ export default class GameScene extends Phaser.Scene {
     // Stone paths in town using Cainos tileset
     const townPath = this.add.tileSprite(townX + 40, townY, 200, 160, 'tileset_stone');
     townPath.setOrigin(0, 0);
-    townPath.setDepth(0);
+    townPath.setDepth(-0.5); // Slightly above grass but below everything else
 
     // Building 1 (left)
     graphics.fillStyle(0x8d6e63, 1);
