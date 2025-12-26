@@ -4,12 +4,21 @@ import socketManager from '../network/SocketManager.js';
 export default class LoginScene extends Phaser.Scene {
   constructor() {
     super({ key: 'LoginScene' });
+    this.eventListenersAdded = false;
   }
 
   create() {
     // Show auth container
     document.getElementById('auth-container').style.display = 'block';
 
+    // Only add event listeners once to prevent memory leaks
+    if (!this.eventListenersAdded) {
+      this.setupEventListeners();
+      this.eventListenersAdded = true;
+    }
+  }
+
+  setupEventListeners() {
     // Set up form switching
     document.getElementById('show-register').addEventListener('click', () => {
       document.getElementById('login-form').classList.remove('active');

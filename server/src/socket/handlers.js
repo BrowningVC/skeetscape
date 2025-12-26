@@ -350,7 +350,7 @@ module.exports = {
 
     // Broadcast fire placement
     io.emit('firePlaced', {
-      fireId,
+      id: fireId, // Use 'id' to match client's expectation
       x,
       y,
       placedBy: player.username
