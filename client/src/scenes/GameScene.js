@@ -17,10 +17,14 @@ export default class GameScene extends Phaser.Scene {
     this.cursors = null;
     this.lastMoveEmit = 0;
     this.playerData = null;
+    this.treesPhysicsGroup = null; // Physics group for tree collisions
   }
 
   create() {
     console.log('🎮 GameScene created');
+
+    // Create physics group for trees (before drawing map)
+    this.treesPhysicsGroup = this.physics.add.staticGroup();
 
     // Draw map zones (grass tileset provides background)
     this.drawMapZones();
@@ -197,6 +201,32 @@ export default class GameScene extends Phaser.Scene {
       stroke: '#1565c0',
       strokeThickness: 2
     });
+
+    // Create collision zones (initialized here, colliders added after player creation)
+    this.collisionZones = this.physics.add.staticGroup();
+
+    // River collision zone (full river area)
+    const riverCollision = this.add.rectangle(riverX + riverWidth/2, riverY + riverHeight/2, riverWidth, riverHeight);
+    this.physics.add.existing(riverCollision, true);
+    this.collisionZones.add(riverCollision);
+
+    // Town building collisions
+    const building1 = this.add.rectangle(townX + 90, townY + 35, 60, 50);
+    this.physics.add.existing(building1, true);
+    this.collisionZones.add(building1);
+
+    const building2 = this.add.rectangle(townX + 190, townY + 35, 60, 50);
+    this.physics.add.existing(building2, true);
+    this.collisionZones.add(building2);
+
+    const building3 = this.add.rectangle(townX + 140, townY + 125, 60, 50);
+    this.physics.add.existing(building3, true);
+    this.collisionZones.add(building3);
+
+    // Farm building collision
+    const farmBuilding = this.add.rectangle(farmX + 140, farmY + 130, 280, 260);
+    this.physics.add.existing(farmBuilding, true);
+    this.collisionZones.add(farmBuilding);
   }
 
   setupSocketListeners() {
@@ -299,11 +329,32 @@ export default class GameScene extends Phaser.Scene {
       data.monsters.forEach((monsterData) => {
         const monster = this.monsters.get(monsterData.id);
         if (monster && monster.monsterHealth > 0) {
+          // Use moveTo method to update position and play walk animations
+          const targetX = monsterData.x;
+          const targetY = monsterData.y;
+
           this.tweens.add({
             targets: monster,
-            x: monsterData.x,
-            y: monsterData.y,
-            duration: 50
+            x: targetX,
+            y: targetY,
+            duration: 50,
+            onStart: () => {
+              // Calculate direction and play walk animation
+              const dx = targetX - monster.x;
+              const dy = targetY - monster.y;
+
+              if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
+                if (Math.abs(dx) > Math.abs(dy)) {
+                  monster.play(dx > 0 ? 'goblin_walk_right' : 'goblin_walk_left', true);
+                } else {
+                  monster.play(dy > 0 ? 'goblin_walk_down' : 'goblin_walk_up', true);
+                }
+              }
+            },
+            onComplete: () => {
+              // Return to idle when movement completes
+              monster.play('goblin_idle', true);
+            }
           });
         }
       });
@@ -451,6 +502,12 @@ export default class GameScene extends Phaser.Scene {
     // Camera follow
     this.cameras.main.startFollow(this.player);
     this.cameras.main.setBounds(0, 0, GAME_WIDTH, GAME_HEIGHT);
+
+    // Add collisions with static zones (river, buildings)
+    this.physics.add.collider(this.player, this.collisionZones);
+
+    // Add collisions with trees
+    this.physics.add.collider(this.player, this.treesPhysicsGroup);
   }
 
   createOtherPlayer(playerData) {
@@ -487,6 +544,12 @@ export default class GameScene extends Phaser.Scene {
     tree.setInteractive();
     tree.treeId = treeData.id;
     tree.setDepth(3); // Above water (0) but below monsters (5)
+
+    // Add physics body for collision (smaller than sprite for better interaction range)
+    this.physics.add.existing(tree, true);
+    tree.body.setSize(48, 48); // Smaller collision box than 64x64 sprite
+    tree.body.setOffset(8, 8); // Center the collision box
+    this.treesPhysicsGroup.add(tree);
 
     tree.on('pointerdown', () => {
       this.socketManager.emit('chop', { treeId: tree.treeId });
