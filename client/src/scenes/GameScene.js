@@ -54,21 +54,24 @@ export default class GameScene extends Phaser.Scene {
 
     const graphics = this.add.graphics();
 
-    // River with flowing water pattern
+    // River with LPC animated water tiles
     const riverY = 180;
     const riverHeight = 80;
-    graphics.fillStyle(0x42a5f5, 1);
-    graphics.fillRect(200, riverY, 400, riverHeight);
-    // Water highlights
-    graphics.fillStyle(0x64b5f6, 0.6);
-    for (let i = 0; i < 20; i++) {
-      graphics.fillRect(200 + Math.random() * 400, riverY + Math.random() * riverHeight,
-                       10 + Math.random() * 20, 3);
-    }
+    const riverX = 200;
+    const riverWidth = 400;
+
+    // Use the large water tile from the LPC water tileset (bottom right area)
+    // The tileset has water tiles around 384x96 pixels in the bottom right
+    const waterTile = this.add.tileSprite(riverX, riverY, riverWidth, riverHeight, 'water_animate');
+    waterTile.setOrigin(0, 0);
+    waterTile.setDepth(-1);
+    // Crop to use the main water area from the tileset
+    waterTile.setTilePosition(384, 192);
+
     // River banks (darker)
     graphics.fillStyle(0x5d4037, 1);
-    graphics.fillRect(200, riverY - 4, 400, 4);
-    graphics.fillRect(200, riverY + riverHeight, 400, 4);
+    graphics.fillRect(riverX, riverY - 4, riverWidth, 4);
+    graphics.fillRect(riverX, riverY + riverHeight, riverWidth, 4);
 
     // Town buildings
     const townX = 100;
