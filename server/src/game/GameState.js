@@ -39,11 +39,11 @@ class GameState {
       });
     });
 
-    // Spawn 3 fishing spots at river
+    // Spawn 3 fishing spots at river (moved to new river position Y=280-360)
     const fishingSpawns = [
-      { x: 300, y: 200 },
-      { x: 350, y: 220 },
-      { x: 400, y: 200 }
+      { x: 200, y: 310 },
+      { x: 300, y: 330 },
+      { x: 400, y: 310 }
     ];
 
     fishingSpawns.forEach((spawn, index) => {
@@ -56,16 +56,16 @@ class GameState {
       });
     });
 
-    // Spawn 8 trees around the map
+    // Spawn 8 trees around the map (repositioned to avoid river at Y=280-360)
     const treeSpawns = [
-      { x: 200, y: 400 },
-      { x: 250, y: 420 },
-      { x: 200, y: 480 },
-      { x: 500, y: 300 },
-      { x: 550, y: 280 },
-      { x: 600, y: 320 },
-      { x: 300, y: 500 },
-      { x: 350, y: 520 }
+      { x: 150, y: 420 },
+      { x: 200, y: 450 },
+      { x: 250, y: 480 },
+      { x: 550, y: 400 },
+      { x: 600, y: 420 },
+      { x: 650, y: 450 },
+      { x: 350, y: 500 },
+      { x: 400, y: 520 }
     ];
 
     treeSpawns.forEach((spawn, index) => {
