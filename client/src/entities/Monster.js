@@ -2,7 +2,7 @@ import { COLORS } from '../utils/Constants.js';
 
 export default class Monster extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, monsterData) {
-    super(scene, monsterData.x, monsterData.y, 'monster_placeholder');
+    super(scene, monsterData.x, monsterData.y, 'goblin');
 
     this.scene = scene;
     this.monsterId = monsterData.id;
@@ -13,16 +13,15 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
     scene.add.existing(this);
     scene.physics.add.existing(this);
 
-    // Set up sprite
-    this.setFrame(0); // Use first frame of placeholder texture
-    this.setScale(1); // Ensure full size
+    // Set up sprite - goblins are 64x64 LPC sprites
+    this.setScale(1); // Full size (64x64)
     this.setDepth(5); // Ensure monsters render above ground
     this.setInteractive();
     this.setOrigin(0.5, 0.5);
 
-    // Play idle animation to ensure visibility
-    if (scene.anims.exists('monster_idle')) {
-      this.play('monster_idle');
+    // Play idle animation (goblin facing down)
+    if (scene.anims.exists('goblin_idle')) {
+      this.play('goblin_idle');
     }
 
     console.log('🐉 Monster created:', {
@@ -141,6 +140,43 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
     this.healthBarBg.setVisible(false);
   }
 
+  moveTo(newX, newY) {
+    // Store previous position to determine direction
+    const oldX = this.x;
+    const oldY = this.y;
+
+    // Calculate direction
+    const dx = newX - oldX;
+    const dy = newY - oldY;
+
+    // Only play animation if actually moving
+    if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
+      // Determine which direction animation to play
+      if (Math.abs(dx) > Math.abs(dy)) {
+        // Moving horizontally
+        if (dx > 0) {
+          this.play('goblin_walk_right', true);
+        } else {
+          this.play('goblin_walk_left', true);
+        }
+      } else {
+        // Moving vertically
+        if (dy > 0) {
+          this.play('goblin_walk_down', true);
+        } else {
+          this.play('goblin_walk_up', true);
+        }
+      }
+    } else {
+      // Not moving, play idle
+      this.play('goblin_idle', true);
+    }
+
+    // Update position
+    this.x = newX;
+    this.y = newY;
+  }
+
   respawn(x, y, health, maxHealth) {
     this.x = x;
     this.y = y;
@@ -156,6 +192,9 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
     // Show health bars
     this.healthBar.setVisible(true);
     this.healthBarBg.setVisible(true);
+
+    // Play idle animation
+    this.play('goblin_idle', true);
 
     this.updateHealthBar();
   }

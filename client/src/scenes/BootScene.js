@@ -56,8 +56,12 @@ export default class BootScene extends Phaser.Scene {
       frameHeight: 64
     });
 
-    // Monster sprite will be created as placeholder in createPlaceholderAssets()
-    // Goblin sprite is too complex (6144x1024, 1536 frames)
+    // Load LPC Goblin sprite sheet (64x64 frames, full animation set)
+    console.log('📦 Loading LPC goblin sprite from:', lpcPath + 'goblin.png');
+    this.load.spritesheet('goblin', lpcPath + 'goblin.png', {
+      frameWidth: 64,
+      frameHeight: 64
+    });
 
     // Load environment tilesets from Cainos pack (original graphics)
     console.log('📦 Loading grass tileset from:', tilesetsPath + 'grass.png');
@@ -120,17 +124,86 @@ export default class BootScene extends Phaser.Scene {
       frameRate: 1
     });
 
-    // Monster idle animation - use placeholder texture
+    // Goblin animations (LPC format: 96 columns x 16 rows = 1536 frames)
+    // Row 8-11 contain walk animations (like player)
+    // Row 8: Walk up, Row 9: Walk left, Row 10: Walk down, Row 11: Walk right
+    // Each animation is 9 frames
+
+    this.anims.create({
+      key: 'goblin_walk_up',
+      frames: this.anims.generateFrameNumbers('goblin', { start: 768, end: 776 }),
+      frameRate: 10,
+      repeat: -1
+    });
+
+    this.anims.create({
+      key: 'goblin_walk_left',
+      frames: this.anims.generateFrameNumbers('goblin', { start: 864, end: 872 }),
+      frameRate: 10,
+      repeat: -1
+    });
+
+    this.anims.create({
+      key: 'goblin_walk_down',
+      frames: this.anims.generateFrameNumbers('goblin', { start: 960, end: 968 }),
+      frameRate: 10,
+      repeat: -1
+    });
+
+    this.anims.create({
+      key: 'goblin_walk_right',
+      frames: this.anims.generateFrameNumbers('goblin', { start: 1056, end: 1064 }),
+      frameRate: 10,
+      repeat: -1
+    });
+
+    this.anims.create({
+      key: 'goblin_idle',
+      frames: [{ key: 'goblin', frame: 964 }], // Middle frame of walk_down
+      frameRate: 1
+    });
+
+    // Goblin slash animations (Row 12-15: Slash up, left, down, right)
+    this.anims.create({
+      key: 'goblin_slash_up',
+      frames: this.anims.generateFrameNumbers('goblin', { start: 1152, end: 1157 }),
+      frameRate: 12,
+      repeat: 0
+    });
+
+    this.anims.create({
+      key: 'goblin_slash_left',
+      frames: this.anims.generateFrameNumbers('goblin', { start: 1248, end: 1253 }),
+      frameRate: 12,
+      repeat: 0
+    });
+
+    this.anims.create({
+      key: 'goblin_slash_down',
+      frames: this.anims.generateFrameNumbers('goblin', { start: 1344, end: 1349 }),
+      frameRate: 12,
+      repeat: 0
+    });
+
+    this.anims.create({
+      key: 'goblin_slash_right',
+      frames: this.anims.generateFrameNumbers('goblin', { start: 1440, end: 1445 }),
+      frameRate: 12,
+      repeat: 0
+    });
+
+    // Keep placeholder for backward compatibility
     this.anims.create({
       key: 'monster_idle',
-      frames: [{ key: 'monster_placeholder', frame: 0 }],
+      frames: [{ key: 'goblin', frame: 964 }],
       frameRate: 1
     });
 
     // Debug: Check if sprites loaded correctly
     const playerTexture = this.textures.get('player');
+    const goblinTexture = this.textures.get('goblin');
     console.log('🎨 Player texture loaded:', playerTexture.frameTotal, 'frames');
-    console.log('🎨 Monster placeholder created');
+    console.log('🎨 Goblin texture loaded:', goblinTexture.frameTotal, 'frames');
 
     console.log('✅ Boot scene complete, LPC (OSRS-style) pixel art loaded');
     this.scene.start('LoginScene');
@@ -138,25 +211,7 @@ export default class BootScene extends Phaser.Scene {
 
   createPlaceholderAssets() {
     // Create placeholder graphics for items not yet in LPC pack
-
-    // Monster placeholder - simple red/brown creature
-    const monsterGraphics = this.add.graphics();
-    // Body
-    monsterGraphics.fillStyle(0x8b0000, 1); // Dark red
-    monsterGraphics.fillCircle(16, 20, 12);
-    // Head
-    monsterGraphics.fillStyle(0xa52a2a, 1); // Brown
-    monsterGraphics.fillCircle(16, 12, 8);
-    // Eyes
-    monsterGraphics.fillStyle(0xffff00, 1); // Yellow
-    monsterGraphics.fillCircle(12, 11, 2);
-    monsterGraphics.fillCircle(20, 11, 2);
-    // Horns
-    monsterGraphics.fillStyle(0x654321, 1);
-    monsterGraphics.fillTriangle(10, 8, 8, 4, 12, 6);
-    monsterGraphics.fillTriangle(22, 8, 24, 4, 20, 6);
-    monsterGraphics.generateTexture('monster_placeholder', 32, 32);
-    monsterGraphics.destroy();
+    // Note: Monster/goblin sprite is now loaded from LPC assets
 
     // Tree stump placeholder (tree is loaded from LPC)
     const stumpGraphics = this.add.graphics();
