@@ -38,7 +38,9 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
 
     // Create health bar
     this.healthBarBg = scene.add.graphics();
+    this.healthBarBg.setDepth(100); // Above monsters and all game objects
     this.healthBar = scene.add.graphics();
+    this.healthBar.setDepth(100); // Above monsters and all game objects
     this.updateHealthBar();
 
     // Click handler for attacking

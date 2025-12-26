@@ -65,10 +65,12 @@ export default class UIScene extends Phaser.Scene {
     const hpHeight = 20;
 
     this.healthBarBg = this.add.graphics();
+    this.healthBarBg.setDepth(1000); // UI elements always on top
     this.healthBarBg.fillStyle(COLORS.HEALTH_BAR_BG, 0.8);
     this.healthBarBg.fillRect(hpX, hpY, hpWidth, hpHeight);
 
     this.healthBar = this.add.graphics();
+    this.healthBar.setDepth(1000); // UI elements always on top
 
     this.healthText = this.add.text(hpX + hpWidth / 2, hpY + hpHeight / 2, 'Loading...', {
       font: '12px Arial',
@@ -209,6 +211,7 @@ export default class UIScene extends Phaser.Scene {
     const panelHeight = 400;
 
     this.inventoryPanel = this.add.graphics();
+    this.inventoryPanel.setDepth(1001); // Above all other UI elements
     this.inventoryPanel.fillStyle(0x333333, 0.95);
     this.inventoryPanel.fillRect(panelX, panelY, panelWidth, panelHeight);
     this.inventoryPanel.lineStyle(2, 0x667eea);
@@ -247,6 +250,7 @@ export default class UIScene extends Phaser.Scene {
 
       // Slot background
       const slotBg = this.add.graphics();
+      slotBg.setDepth(1002); // Above inventory panel
       slotBg.fillStyle(0x555555, 1);
       slotBg.fillRect(x, y, slotSize - 4, slotSize - 4);
       slotBg.lineStyle(1, 0x888888);
@@ -316,6 +320,7 @@ export default class UIScene extends Phaser.Scene {
     const panelHeight = 350;
 
     this.statsPanel = this.add.graphics();
+    this.statsPanel.setDepth(1001); // Above all other UI elements
     this.statsPanel.fillStyle(0x333333, 0.95);
     this.statsPanel.fillRect(panelX, panelY, panelWidth, panelHeight);
     this.statsPanel.lineStyle(2, 0x667eea);

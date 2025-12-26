@@ -473,7 +473,9 @@ export default class GameScene extends Phaser.Scene {
 
     // Health bar
     otherPlayer.healthBarBg = this.add.graphics();
+    otherPlayer.healthBarBg.setDepth(100); // Above players and all game objects
     otherPlayer.healthBar = this.add.graphics();
+    otherPlayer.healthBar.setDepth(100); // Above players and all game objects
 
     this.otherPlayers.set(playerData.socketId, otherPlayer);
   }
