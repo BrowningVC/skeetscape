@@ -16,8 +16,25 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
     // Set up sprite
     this.setFrame(0); // Use first frame of goblin sprite
     this.setScale(1); // Ensure full size
+    this.setDepth(5); // Ensure monsters render above ground
     this.setInteractive();
     this.setOrigin(0.5, 0.5);
+
+    // Play idle animation to ensure visibility
+    if (scene.anims.exists('monster_idle')) {
+      this.play('monster_idle');
+    }
+
+    console.log('🐉 Monster created:', {
+      id: this.monsterId,
+      x: monsterData.x,
+      y: monsterData.y,
+      visible: this.visible,
+      alpha: this.alpha,
+      scale: this.scale,
+      frame: this.frame.name,
+      texture: this.texture.key
+    });
 
     // Create health bar
     this.healthBarBg = scene.add.graphics();

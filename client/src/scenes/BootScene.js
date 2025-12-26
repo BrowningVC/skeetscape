@@ -115,6 +115,19 @@ export default class BootScene extends Phaser.Scene {
       frameRate: 1
     });
 
+    // Monster idle animation - use first frame
+    this.anims.create({
+      key: 'monster_idle',
+      frames: [{ key: 'monster', frame: 0 }],
+      frameRate: 1
+    });
+
+    // Debug: Check if sprites loaded correctly
+    const playerTexture = this.textures.get('player');
+    const monsterTexture = this.textures.get('monster');
+    console.log('🎨 Player texture loaded:', playerTexture.frameTotal, 'frames');
+    console.log('🎨 Monster texture loaded:', monsterTexture.frameTotal, 'frames');
+
     console.log('✅ Boot scene complete, LPC (OSRS-style) pixel art loaded');
     this.scene.start('LoginScene');
   }
