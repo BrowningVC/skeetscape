@@ -27,6 +27,16 @@ app.use(express.static(path.join(__dirname, '../../client')));
 // Routes
 app.use('/auth', authRoutes);
 
+// Serve landing page at root
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../client/landing.html'));
+});
+
+// Serve game at /game
+app.get('/game', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../client/game.html'));
+});
+
 let gameState;
 let gameLoop;
 

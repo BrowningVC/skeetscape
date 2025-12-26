@@ -372,17 +372,23 @@ export default class GameScene extends Phaser.Scene {
       } else {
         this.showMessage(`Hit for ${data.damage}! (+${data.xp} XP)`, 0x00ff00);
 
-        if (data.loot) {
-          const lootMsg = data.loot.rarity === 'ultra_rare' ? `🎉 ULTRA RARE: ${data.loot.item_id}!` :
-                          data.loot.rarity === 'very_rare' ? `✨ VERY RARE: ${data.loot.item_id}!` :
-                          `Loot: ${data.loot.item_id} x${data.loot.quantity}`;
-          this.showMessage(lootMsg, 0xffd700);
-        }
-
         if (data.levelUp) {
           this.showMessage(`🎉 Combat level up! ${data.levelUp.newLevel}`, 0xffd700);
         }
       }
+    });
+
+    // Loot dropped on ground
+    this.socketManager.on('lootDropped', (data) => {
+      const lootMsg = data.rarity === 'ultra_rare' ? `🎉 ULTRA RARE: ${data.item.item_id}!` :
+                      data.rarity === 'very_rare' ? `✨ VERY RARE: ${data.item.item_id}!` :
+                      data.rarity === 'rare' ? `💎 RARE: ${data.item.item_id}!` :
+                      `Loot: ${data.item.item_id} x${data.item.quantity}`;
+      const color = data.rarity === 'ultra_rare' ? 0xff00ff :
+                    data.rarity === 'very_rare' ? 0x00ffff :
+                    data.rarity === 'rare' ? 0xffd700 :
+                    0xffffff;
+      this.showMessage(lootMsg, color);
     });
 
     // Fishing result
