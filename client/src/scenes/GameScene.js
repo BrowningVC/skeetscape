@@ -159,8 +159,10 @@ export default class GameScene extends Phaser.Scene {
     // Path from town to farm using Cainos tileset
     const pathVertical = this.add.tileSprite(240, 240, 16, 80, 'tileset_stone');
     pathVertical.setOrigin(0, 0);
+    pathVertical.setDepth(-1); // Same as town paths
     const pathHorizontal = this.add.tileSprite(240, 320, 260, 16, 'tileset_stone');
     pathHorizontal.setOrigin(0, 0);
+    pathHorizontal.setDepth(-1); // Same as town paths
 
     // Add some decorative flowers around the map
     const flowerColors = [0xff1744, 0xe91e63, 0x9c27b0, 0xffeb3b];
@@ -457,6 +459,7 @@ export default class GameScene extends Phaser.Scene {
     const otherPlayer = this.add.sprite(playerData.x, playerData.y, 'player');
     otherPlayer.setTint(0xaaaaff);
     otherPlayer.setScale(1); // Match main player scale
+    otherPlayer.setDepth(10); // Same as main player
 
     // Name tag (adjusted offset for full-scale sprite)
     otherPlayer.nameText = this.add.text(playerData.x, playerData.y - 40, playerData.username, {
@@ -483,6 +486,7 @@ export default class GameScene extends Phaser.Scene {
     const tree = this.add.sprite(treeData.x, treeData.y, treeData.available ? 'tree' : 'tree_stump');
     tree.setInteractive();
     tree.treeId = treeData.id;
+    tree.setDepth(3); // Above water (0) but below monsters (5)
 
     tree.on('pointerdown', () => {
       this.socketManager.emit('chop', { treeId: tree.treeId });
@@ -503,6 +507,7 @@ export default class GameScene extends Phaser.Scene {
     const spot = this.add.sprite(spotData.x, spotData.y, 'fishing_spot');
     spot.setInteractive();
     spot.spotId = spotData.id;
+    spot.setDepth(1); // Above water (0), should float on water surface
 
     spot.on('pointerdown', () => {
       this.socketManager.emit('fish', { spotId: spot.spotId });
@@ -521,6 +526,7 @@ export default class GameScene extends Phaser.Scene {
 
   createFire(fireData) {
     const fire = this.add.sprite(fireData.x, fireData.y, 'fire');
+    fire.setDepth(2); // Above water (0) and fishing spots (1)
     this.fires.set(fireData.id, fire);
   }
 

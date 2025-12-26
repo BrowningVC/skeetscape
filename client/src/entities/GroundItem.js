@@ -41,6 +41,7 @@ export default class GroundItem extends Phaser.GameObjects.Container {
 
     // Add to scene
     scene.add.existing(this);
+    this.setDepth(4); // Above trees (3) but below monsters (5)
 
     // Pulsing animation
     scene.tweens.add({
