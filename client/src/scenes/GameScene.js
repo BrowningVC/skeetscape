@@ -47,21 +47,14 @@ export default class GameScene extends Phaser.Scene {
 
   drawMapZones() {
     const tileSize = 32;
+
+    // Base grass layer using Cainos tileset
+    const grassTilesprite = this.add.tileSprite(0, 0, GAME_WIDTH, GAME_HEIGHT, 'tileset_grass');
+    grassTilesprite.setOrigin(0, 0);
+    grassTilesprite.setDepth(-1);
+
+    // Keep graphics for other elements
     const graphics = this.add.graphics();
-
-    // Base grass layer (entire map)
-    graphics.fillStyle(0x7cb342, 1);
-    graphics.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-
-    // Add grass texture pattern
-    graphics.fillStyle(0x8bc34a, 1);
-    for (let x = 0; x < GAME_WIDTH; x += tileSize) {
-      for (let y = 0; y < GAME_HEIGHT; y += tileSize) {
-        if (Math.random() > 0.7) {
-          graphics.fillRect(x + Math.random() * 8, y + Math.random() * 8, 4, 4);
-        }
-      }
-    }
 
     // River with flowing water pattern
     const riverY = 180;
