@@ -66,9 +66,9 @@ export default class BootScene extends Phaser.Scene {
     console.log('📦 Loading stone tileset from:', tilesetsPath + 'stone.png');
     this.load.image('tileset_stone', tilesetsPath + 'stone.png');
 
-    // Load animated water tileset from LPC (576x386, contains waterfalls and water tiles)
-    console.log('📦 Loading LPC animated water from:', 'assets/water_animate.png');
-    this.load.image('water_animate', 'assets/water_animate.png');
+    // Load water and grass tileset (96x416, 32x32 tiles, CC0 license from OpenGameArt)
+    console.log('📦 Loading water/grass tileset from:', 'assets/watergrass.png');
+    this.load.image('tileset_water', 'assets/watergrass.png');
 
     // Load tree from LPC
     this.load.image('tree', lpcPath + 'tree.png');
