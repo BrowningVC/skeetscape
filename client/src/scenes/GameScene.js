@@ -64,7 +64,7 @@ export default class GameScene extends Phaser.Scene {
     // The tileset has water tiles around 384x96 pixels in the bottom right
     const waterTile = this.add.tileSprite(riverX, riverY, riverWidth, riverHeight, 'water_animate');
     waterTile.setOrigin(0, 0);
-    waterTile.setDepth(-1);
+    waterTile.setDepth(0); // Above grass (-2) and stone paths (-1)
     // Crop to use the main water area from the tileset
     waterTile.setTilePosition(384, 192);
 
