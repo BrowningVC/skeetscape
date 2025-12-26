@@ -13,6 +13,14 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
     scene.add.existing(this);
     scene.physics.add.existing(this);
 
+    // Debug: Check if goblin texture exists
+    if (!scene.textures.exists('goblin')) {
+      console.error('❌ Goblin texture not found! Available textures:', scene.textures.getTextureKeys());
+    } else {
+      const goblinTexture = scene.textures.get('goblin');
+      console.log('✅ Goblin texture found:', goblinTexture.frameTotal, 'frames');
+    }
+
     // Set up sprite - goblins are 64x64 LPC sprites
     this.setScale(1); // Full size (64x64)
     this.setDepth(5); // Ensure monsters render above ground
@@ -22,6 +30,8 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
     // Play idle animation (goblin facing down)
     if (scene.anims.exists('goblin_idle')) {
       this.play('goblin_idle');
+    } else {
+      console.error('❌ goblin_idle animation not found! Available anims:', scene.anims.anims.keys);
     }
 
     console.log('🐉 Monster created:', {
