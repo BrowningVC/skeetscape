@@ -45,107 +45,80 @@ export default class BootScene extends Phaser.Scene {
       console.error('❌ Failed to load:', file.src);
     });
 
-    // Load Cainos pixel art assets
-    const assetPath = 'assets/sprites/Pixel Art Top Down - Basic v1.2.2/Texture/';
+    // Load LPC (Liberated Pixel Cup) assets - OSRS-style pixel art
+    const lpcPath = 'assets/lpc/';
 
-    // Load sprite sheets
-    console.log('📦 Loading player sprite from:', assetPath + 'TX Player.png');
-    this.load.spritesheet('player', assetPath + 'TX Player.png', {
-      frameWidth: 32,
-      frameHeight: 32
+    // Load sprite sheets (64x64 LPC format)
+    console.log('📦 Loading LPC player sprite from:', lpcPath + 'player_spritesheet.png');
+    this.load.spritesheet('player', lpcPath + 'player_spritesheet.png', {
+      frameWidth: 64,
+      frameHeight: 64
     });
 
-    this.load.image('tileset_grass', assetPath + 'TX Tileset Grass.png');
-    this.load.image('tileset_stone', assetPath + 'TX Tileset Stone Ground.png');
-    this.load.image('tileset_wall', assetPath + 'TX Tileset Wall.png');
-    this.load.image('plants', assetPath + 'TX Plant.png');
-    this.load.image('props', assetPath + 'TX Props.png');
-    this.load.image('struct', assetPath + 'TX Struct.png');
-    this.load.image('shadow', assetPath + 'TX Shadow.png');
+    console.log('📦 Loading LPC goblin sprite from:', lpcPath + 'goblin.png');
+    this.load.spritesheet('monster', lpcPath + 'goblin.png', {
+      frameWidth: 64,
+      frameHeight: 64
+    });
 
-    // Still create some placeholder graphics for items not in the pack
+    // Load tilesets and environment sprites
+    this.load.image('tileset_grass', lpcPath + 'tileset_grass.png');
+    this.load.image('tree', lpcPath + 'tree.png');
+
+    // Create placeholder graphics for items not yet in LPC pack
     this.createPlaceholderAssets();
   }
 
   create() {
-    // Create player animations from the sprite sheet
-    this.anims.create({
-      key: 'player_idle_down',
-      frames: [{ key: 'player', frame: 0 }],
-      frameRate: 1
-    });
+    // Create player animations for LPC sprite sheet
+    // LPC format: Row 0-7 for different directions with 9 frames each
+    // Rows: 0=Spellcast, 1=Thrust, 2=Walk, 3=Slash, 4=Shoot, 5=Hurt, 6-7=Idle variations
 
-    this.anims.create({
-      key: 'player_walk_down',
-      frames: this.anims.generateFrameNumbers('player', { start: 0, end: 1 }),
-      frameRate: 8,
-      repeat: -1
-    });
-
+    // Walking animations (row 2: up, left, down, right)
     this.anims.create({
       key: 'player_walk_up',
-      frames: this.anims.generateFrameNumbers('player', { start: 4, end: 5 }),
-      frameRate: 8,
+      frames: this.anims.generateFrameNumbers('player', { start: 0, end: 8 }),
+      frameRate: 12,
       repeat: -1
     });
 
     this.anims.create({
       key: 'player_walk_left',
-      frames: this.anims.generateFrameNumbers('player', { start: 8, end: 9 }),
-      frameRate: 8,
+      frames: this.anims.generateFrameNumbers('player', { start: 9, end: 17 }),
+      frameRate: 12,
+      repeat: -1
+    });
+
+    this.anims.create({
+      key: 'player_walk_down',
+      frames: this.anims.generateFrameNumbers('player', { start: 18, end: 26 }),
+      frameRate: 12,
       repeat: -1
     });
 
     this.anims.create({
       key: 'player_walk_right',
-      frames: this.anims.generateFrameNumbers('player', { start: 12, end: 13 }),
-      frameRate: 8,
+      frames: this.anims.generateFrameNumbers('player', { start: 27, end: 35 }),
+      frameRate: 12,
       repeat: -1
     });
 
-    console.log('✅ Boot scene complete, Cainos pixel art loaded');
+    // Idle animation (use first frame of walk down)
+    this.anims.create({
+      key: 'player_idle_down',
+      frames: [{ key: 'player', frame: 18 }],
+      frameRate: 1
+    });
+
+    console.log('✅ Boot scene complete, LPC (OSRS-style) pixel art loaded');
     this.scene.start('LoginScene');
   }
 
   createPlaceholderAssets() {
-    // Create placeholder graphics for items not in the Cainos pack
-    // Note: Player sprite is now loaded from the actual sprite sheet, not generated here
+    // Create placeholder graphics for items not yet in LPC pack
+    // Player and Monster sprites are now loaded from actual LPC spritesheets
 
-    // Monster placeholder - red goblin-like creature
-    const monsterGraphics = this.add.graphics();
-    // Body
-    monsterGraphics.fillStyle(0xe74c3c);
-    monsterGraphics.fillRect(6, 14, 20, 14);
-    // Head
-    monsterGraphics.fillStyle(0xc0392b);
-    monsterGraphics.fillRect(8, 8, 16, 10);
-    // Eyes (angry)
-    monsterGraphics.fillStyle(0xffff00);
-    monsterGraphics.fillRect(11, 12, 3, 3);
-    monsterGraphics.fillRect(18, 12, 3, 3);
-    // Horns
-    monsterGraphics.fillStyle(0x8b0000);
-    monsterGraphics.fillRect(7, 8, 3, 4);
-    monsterGraphics.fillRect(22, 8, 3, 4);
-    monsterGraphics.generateTexture('monster', 32, 32);
-    monsterGraphics.destroy();
-
-    // Tree placeholder - pixelated tree
-    const treeGraphics = this.add.graphics();
-    // Trunk
-    treeGraphics.fillStyle(0x8b4513);
-    treeGraphics.fillRect(12, 24, 8, 24);
-    // Leaves (layered)
-    treeGraphics.fillStyle(0x2d5016);
-    treeGraphics.fillRect(4, 12, 24, 16);
-    treeGraphics.fillStyle(0x27ae60);
-    treeGraphics.fillRect(6, 8, 20, 12);
-    treeGraphics.fillStyle(0x52c77a);
-    treeGraphics.fillRect(8, 6, 16, 8);
-    treeGraphics.generateTexture('tree', 32, 48);
-    treeGraphics.destroy();
-
-    // Tree stump placeholder
+    // Tree stump placeholder (tree is loaded from LPC)
     const stumpGraphics = this.add.graphics();
     stumpGraphics.fillStyle(0x8b4513);
     stumpGraphics.fillRect(8, 8, 16, 16);
