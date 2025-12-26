@@ -159,7 +159,7 @@ export default class BootScene extends Phaser.Scene {
 
     this.anims.create({
       key: 'goblin_idle',
-      frames: [{ key: 'goblin', frame: 960 }], // walk_down starting frame
+      frames: [{ key: 'goblin', frame: 964 }], // walk_down middle frame
       frameRate: 1
     });
 
@@ -195,7 +195,7 @@ export default class BootScene extends Phaser.Scene {
     // Keep placeholder for backward compatibility
     this.anims.create({
       key: 'monster_idle',
-      frames: [{ key: 'goblin', frame: 960 }],
+      frames: [{ key: 'goblin', frame: 964 }],
       frameRate: 1
     });
 
