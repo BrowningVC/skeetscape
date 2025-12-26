@@ -2,7 +2,7 @@ import { COLORS } from '../utils/Constants.js';
 
 export default class Monster extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, monsterData) {
-    super(scene, monsterData.x, monsterData.y, 'monster');
+    super(scene, monsterData.x, monsterData.y, 'monster_placeholder');
 
     this.scene = scene;
     this.monsterId = monsterData.id;

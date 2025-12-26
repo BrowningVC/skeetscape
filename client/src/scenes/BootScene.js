@@ -56,11 +56,8 @@ export default class BootScene extends Phaser.Scene {
       frameHeight: 32
     });
 
-    console.log('📦 Loading LPC goblin sprite from:', lpcPath + 'goblin.png');
-    this.load.spritesheet('monster', lpcPath + 'goblin.png', {
-      frameWidth: 64,
-      frameHeight: 64
-    });
+    // Monster sprite will be created as placeholder in createPlaceholderAssets()
+    // Goblin sprite is too complex (6144x1024, 1536 frames)
 
     // Load environment tilesets from Cainos pack (original graphics)
     console.log('📦 Loading grass tileset from:', tilesetsPath + 'grass.png');
@@ -110,18 +107,17 @@ export default class BootScene extends Phaser.Scene {
       frameRate: 1
     });
 
-    // Monster idle animation - use first frame
+    // Monster idle animation - use placeholder texture
     this.anims.create({
       key: 'monster_idle',
-      frames: [{ key: 'monster', frame: 0 }],
+      frames: [{ key: 'monster_placeholder', frame: 0 }],
       frameRate: 1
     });
 
     // Debug: Check if sprites loaded correctly
     const playerTexture = this.textures.get('player');
-    const monsterTexture = this.textures.get('monster');
     console.log('🎨 Player texture loaded:', playerTexture.frameTotal, 'frames');
-    console.log('🎨 Monster texture loaded:', monsterTexture.frameTotal, 'frames');
+    console.log('🎨 Monster placeholder created');
 
     console.log('✅ Boot scene complete, LPC (OSRS-style) pixel art loaded');
     this.scene.start('LoginScene');
@@ -129,7 +125,25 @@ export default class BootScene extends Phaser.Scene {
 
   createPlaceholderAssets() {
     // Create placeholder graphics for items not yet in LPC pack
-    // Player and Monster sprites are now loaded from actual LPC spritesheets
+
+    // Monster placeholder - simple red/brown creature
+    const monsterGraphics = this.add.graphics();
+    // Body
+    monsterGraphics.fillStyle(0x8b0000, 1); // Dark red
+    monsterGraphics.fillCircle(16, 20, 12);
+    // Head
+    monsterGraphics.fillStyle(0xa52a2a, 1); // Brown
+    monsterGraphics.fillCircle(16, 12, 8);
+    // Eyes
+    monsterGraphics.fillStyle(0xffff00, 1); // Yellow
+    monsterGraphics.fillCircle(12, 11, 2);
+    monsterGraphics.fillCircle(20, 11, 2);
+    // Horns
+    monsterGraphics.fillStyle(0x654321, 1);
+    monsterGraphics.fillTriangle(10, 8, 8, 4, 12, 6);
+    monsterGraphics.fillTriangle(22, 8, 24, 4, 20, 6);
+    monsterGraphics.generateTexture('monster_placeholder', 32, 32);
+    monsterGraphics.destroy();
 
     // Tree stump placeholder (tree is loaded from LPC)
     const stumpGraphics = this.add.graphics();
