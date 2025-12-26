@@ -56,21 +56,14 @@ export default class GameScene extends Phaser.Scene {
     // Keep graphics for other elements
     const graphics = this.add.graphics();
 
-    // River with flowing water pattern
+    // River using tinted wall tileset for water texture
     const riverY = 180;
     const riverHeight = 80;
-    graphics.fillStyle(0x42a5f5, 1);
-    graphics.fillRect(200, riverY, 400, riverHeight);
-    // Water highlights
-    graphics.fillStyle(0x64b5f6, 0.6);
-    for (let i = 0; i < 20; i++) {
-      graphics.fillRect(200 + Math.random() * 400, riverY + Math.random() * riverHeight,
-                       10 + Math.random() * 20, 3);
-    }
-    // River banks (darker)
-    graphics.fillStyle(0x5d4037, 1);
-    graphics.fillRect(200, riverY - 4, 400, 4);
-    graphics.fillRect(200, riverY + riverHeight, 400, 4);
+    const riverTilesprite = this.add.tileSprite(200, riverY, 400, riverHeight, 'tileset_wall');
+    riverTilesprite.setOrigin(0, 0);
+    riverTilesprite.setTint(0x42a5f5); // Blue tint for water
+    riverTilesprite.setAlpha(0.8);
+    riverTilesprite.setDepth(-0.3); // Above grass, below paths
 
     // Town buildings
     const townX = 100;
@@ -81,11 +74,18 @@ export default class GameScene extends Phaser.Scene {
     townPath.setOrigin(0, 0);
     townPath.setDepth(-0.5); // Slightly above grass but below everything else
 
+    // Buildings using wall tileset with brown tint
     // Building 1 (left)
-    graphics.fillStyle(0x8d6e63, 1);
-    graphics.fillRect(townX + 60, townY + 20, 60, 50);
-    graphics.fillStyle(0x6d4c41, 1); // roof
-    graphics.fillRect(townX + 55, townY + 10, 70, 15);
+    const building1 = this.add.tileSprite(townX + 60, townY + 20, 60, 50, 'tileset_wall');
+    building1.setOrigin(0, 0);
+    building1.setTint(0x8d6e63); // Brown tint for building walls
+
+    // Building 1 roof
+    const roof1 = this.add.tileSprite(townX + 55, townY + 10, 70, 15, 'tileset_wall');
+    roof1.setOrigin(0, 0);
+    roof1.setTint(0x6d4c41); // Darker brown for roof
+
+    // Building 1 details (door and windows still use graphics)
     graphics.fillStyle(0x5d4037, 1); // door
     graphics.fillRect(townX + 80, townY + 45, 20, 25);
     graphics.fillStyle(0xffeb3b, 1); // windows
@@ -93,10 +93,14 @@ export default class GameScene extends Phaser.Scene {
     graphics.fillRect(townX + 95, townY + 30, 10, 10);
 
     // Building 2 (right)
-    graphics.fillStyle(0x8d6e63, 1);
-    graphics.fillRect(townX + 160, townY + 20, 60, 50);
-    graphics.fillStyle(0x6d4c41, 1);
-    graphics.fillRect(townX + 155, townY + 10, 70, 15);
+    const building2 = this.add.tileSprite(townX + 160, townY + 20, 60, 50, 'tileset_wall');
+    building2.setOrigin(0, 0);
+    building2.setTint(0x8d6e63);
+
+    const roof2 = this.add.tileSprite(townX + 155, townY + 10, 70, 15, 'tileset_wall');
+    roof2.setOrigin(0, 0);
+    roof2.setTint(0x6d4c41);
+
     graphics.fillStyle(0x5d4037, 1);
     graphics.fillRect(townX + 180, townY + 45, 20, 25);
     graphics.fillStyle(0xffeb3b, 1);
@@ -104,10 +108,14 @@ export default class GameScene extends Phaser.Scene {
     graphics.fillRect(townX + 195, townY + 30, 10, 10);
 
     // Building 3 (bottom)
-    graphics.fillStyle(0x8d6e63, 1);
-    graphics.fillRect(townX + 110, townY + 100, 60, 50);
-    graphics.fillStyle(0x6d4c41, 1);
-    graphics.fillRect(townX + 105, townY + 90, 70, 15);
+    const building3 = this.add.tileSprite(townX + 110, townY + 100, 60, 50, 'tileset_wall');
+    building3.setOrigin(0, 0);
+    building3.setTint(0x8d6e63);
+
+    const roof3 = this.add.tileSprite(townX + 105, townY + 90, 70, 15, 'tileset_wall');
+    roof3.setOrigin(0, 0);
+    roof3.setTint(0x6d4c41);
+
     graphics.fillStyle(0x5d4037, 1);
     graphics.fillRect(townX + 130, townY + 125, 20, 25);
     graphics.fillStyle(0xffeb3b, 1);
