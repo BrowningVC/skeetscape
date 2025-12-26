@@ -1,6 +1,7 @@
 import { GAME_WIDTH, GAME_HEIGHT, PLAYER_SPEED, COLORS } from '../utils/Constants.js';
 import socketManager from '../network/SocketManager.js';
 import Monster from '../entities/Monster.js';
+import GroundItem from '../entities/GroundItem.js';
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -12,6 +13,7 @@ export default class GameScene extends Phaser.Scene {
     this.trees = new Map();
     this.fishingSpots = new Map();
     this.fires = new Map();
+    this.groundItems = new Map();
     this.cursors = null;
     this.lastMoveEmit = 0;
     this.playerData = null;
@@ -231,6 +233,11 @@ export default class GameScene extends Phaser.Scene {
       data.fires.forEach((fireData) => {
         this.createFire(fireData);
       });
+
+      // Create ground items
+      data.groundItems.forEach((groundItemData) => {
+        this.createGroundItem(groundItemData);
+      });
     });
 
     // Player joined
@@ -377,6 +384,49 @@ export default class GameScene extends Phaser.Scene {
         // UI scene will handle displaying this
       }
     });
+
+    // Player damaged by monster
+    this.socketManager.on('playerDamaged', (data) => {
+      if (this.player) {
+        this.playerData.health = data.health;
+        this.showPlayerHitsplat(data.damage);
+        this.cameras.main.shake(200, 0.005);
+      }
+    });
+
+    // Player died
+    this.socketManager.on('playerDied', (data) => {
+      if (this.player) {
+        this.playerData.health = data.health;
+        this.player.x = data.x;
+        this.player.y = data.y;
+        this.showMessage(data.message, 0xff0000);
+        this.cameras.main.flash(500, 255, 0, 0);
+      }
+    });
+
+    // Player respawned
+    this.socketManager.on('playerRespawned', (data) => {
+      const otherPlayer = this.otherPlayers.get(data.socketId);
+      if (otherPlayer) {
+        otherPlayer.x = data.x;
+        otherPlayer.y = data.y;
+      }
+    });
+
+    // Ground item spawned
+    this.socketManager.on('groundItemSpawned', (data) => {
+      this.createGroundItem(data);
+    });
+
+    // Ground item picked up
+    this.socketManager.on('groundItemPickedUp', (data) => {
+      const groundItem = this.groundItems.get(data.groundItemId);
+      if (groundItem) {
+        groundItem.destroy();
+        this.groundItems.delete(data.groundItemId);
+      }
+    });
   }
 
   createPlayer(playerData) {
@@ -467,6 +517,34 @@ export default class GameScene extends Phaser.Scene {
   createFire(fireData) {
     const fire = this.add.sprite(fireData.x, fireData.y, 'fire');
     this.fires.set(fireData.id, fire);
+  }
+
+  createGroundItem(groundItemData) {
+    const groundItem = new GroundItem(this, groundItemData);
+    this.groundItems.set(groundItemData.id, groundItem);
+  }
+
+  showPlayerHitsplat(damage) {
+    if (!this.player) return;
+
+    const hitsplat = this.add.text(this.player.x, this.player.y - 40, `-${damage}`, {
+      font: 'bold 16px Arial',
+      fill: '#ff0000',
+      stroke: '#000000',
+      strokeThickness: 3
+    });
+    hitsplat.setOrigin(0.5);
+
+    this.tweens.add({
+      targets: hitsplat,
+      y: hitsplat.y - 30,
+      alpha: 0,
+      duration: 1000,
+      ease: 'Power2',
+      onComplete: () => {
+        hitsplat.destroy();
+      }
+    });
   }
 
   showMessage(text, color) {

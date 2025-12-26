@@ -8,7 +8,30 @@
       "Bash(cat:*)",
       "Bash(curl:*)",
       "Bash(git init:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git remote add:*)",
+      "Bash(git branch:*)",
+      "Bash(git push:*)",
+      "Bash(ssh:*)",
+      "Bash(brew install:*)",
+      "Bash(git remote:*)",
+      "Bash(railway login:*)",
+      "Bash(railway up:*)",
+      "Bash(railway status:*)",
+      "Bash(railway link:*)",
+      "Bash(git checkout:*)",
+      "Bash(lsof:*)",
+      "Bash(xargs kill -9)",
+      "Bash(git revert:*)",
+      "Bash(file:*)",
+      "Bash(git pull:*)",
+      "Bash(railway list:*)",
+      "Bash(railway open:*)",
+      "Bash(railway logs:*)",
+      "Bash(railway service)",
+      "Bash(railway whoami:*)",
+      "Bash(gh repo view:*)"
     ]
   }
 }
