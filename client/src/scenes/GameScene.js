@@ -50,13 +50,11 @@ export default class GameScene extends Phaser.Scene {
   drawMapZones() {
     const tileSize = 32;
 
-    // Base grass layer using Cainos tileset
-    const grassTilesprite = this.add.tileSprite(0, 0, GAME_WIDTH, GAME_HEIGHT, 'tileset_grass');
-    grassTilesprite.setOrigin(0, 0);
-    grassTilesprite.setDepth(-1);
-
-    // Keep graphics for other elements
+    // Base grass layer - simple green background
     const graphics = this.add.graphics();
+    graphics.fillStyle(0x7cb342, 1); // Nice green grass color
+    graphics.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+    graphics.setDepth(-2); // Behind everything
 
     // River with flowing water pattern
     const riverY = 180;
@@ -78,10 +76,10 @@ export default class GameScene extends Phaser.Scene {
     const townX = 100;
     const townY = 80;
 
-    // Stone paths in town using Cainos tileset
-    const townPath = this.add.tileSprite(townX + 40, townY, 200, 160, 'tileset_stone');
-    townPath.setOrigin(0, 0);
-    townPath.setDepth(-0.5); // Slightly above grass but below everything else
+    // Stone paths in town - simple gray rectangle
+    graphics.fillStyle(0x808080, 1);
+    graphics.fillRect(townX + 40, townY, 200, 160);
+    graphics.setDepth(-1); // Above grass but below everything else
 
     // Building 1 (left)
     graphics.fillStyle(0x8d6e63, 1);
@@ -433,6 +431,7 @@ export default class GameScene extends Phaser.Scene {
     console.log('🎮 Creating player with sprite:', 'player');
     this.player = this.physics.add.sprite(playerData.x, playerData.y, 'player');
     this.player.setCollideWorldBounds(true);
+    this.player.setDepth(10); // Ensure player is above ground
     console.log('✅ Player sprite created, frame count:', this.player.texture.frameTotal);
 
     // Name tag

@@ -71,42 +71,47 @@ export default class BootScene extends Phaser.Scene {
 
   create() {
     // Create player animations for LPC sprite sheet
-    // LPC format: Row 0-7 for different directions with 9 frames each
-    // Rows: 0=Spellcast, 1=Thrust, 2=Walk, 3=Slash, 4=Shoot, 5=Hurt, 6-7=Idle variations
+    // LPC format: 8 columns x 6 rows = 48 frames total
+    // Each row has 8 frames
+    // Row 0: Walk up
+    // Row 1: Walk left
+    // Row 2: Walk down
+    // Row 3: Walk right
+    // Row 4-5: Other animations
 
-    // Walking animations (row 2: up, left, down, right)
+    // Walking animations - 8 frames per direction
     this.anims.create({
       key: 'player_walk_up',
-      frames: this.anims.generateFrameNumbers('player', { start: 0, end: 8 }),
-      frameRate: 12,
+      frames: this.anims.generateFrameNumbers('player', { start: 0, end: 7 }),
+      frameRate: 10,
       repeat: -1
     });
 
     this.anims.create({
       key: 'player_walk_left',
-      frames: this.anims.generateFrameNumbers('player', { start: 9, end: 17 }),
-      frameRate: 12,
+      frames: this.anims.generateFrameNumbers('player', { start: 8, end: 15 }),
+      frameRate: 10,
       repeat: -1
     });
 
     this.anims.create({
       key: 'player_walk_down',
-      frames: this.anims.generateFrameNumbers('player', { start: 18, end: 26 }),
-      frameRate: 12,
+      frames: this.anims.generateFrameNumbers('player', { start: 16, end: 23 }),
+      frameRate: 10,
       repeat: -1
     });
 
     this.anims.create({
       key: 'player_walk_right',
-      frames: this.anims.generateFrameNumbers('player', { start: 27, end: 35 }),
-      frameRate: 12,
+      frames: this.anims.generateFrameNumbers('player', { start: 24, end: 31 }),
+      frameRate: 10,
       repeat: -1
     });
 
-    // Idle animation (use first frame of walk down)
+    // Idle animation (use middle frame of walk down for stable idle pose)
     this.anims.create({
       key: 'player_idle_down',
-      frames: [{ key: 'player', frame: 18 }],
+      frames: [{ key: 'player', frame: 16 }],
       frameRate: 1
     });
 

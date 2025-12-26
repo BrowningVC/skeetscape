@@ -14,6 +14,8 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
     scene.physics.add.existing(this);
 
     // Set up sprite
+    this.setFrame(0); // Use first frame of goblin sprite
+    this.setScale(1); // Ensure full size
     this.setInteractive();
     this.setOrigin(0.5, 0.5);
 
