@@ -49,9 +49,9 @@ export default class BootScene extends Phaser.Scene {
     const lpcPath = 'assets/lpc/';
     const tilesetsPath = 'assets/tilesets/';
 
-    // Load character sprite sheets (64x64 LPC format with multiple characters)
-    console.log('📦 Loading LPC player sprite from:', lpcPath + 'player_spritesheet.png');
-    this.load.spritesheet('player', lpcPath + 'player_spritesheet.png', {
+    // Load character sprite sheets (64x64 LPC Universal format - transparent background)
+    console.log('📦 Loading LPC player sprite from:', lpcPath + 'player_human_male.png');
+    this.load.spritesheet('player', lpcPath + 'player_human_male.png', {
       frameWidth: 64,
       frameHeight: 64
     });
@@ -74,44 +74,45 @@ export default class BootScene extends Phaser.Scene {
   }
 
   create() {
-    // Create player animations for LPC sprite sheet
-    // LPC format: 8 columns x 6 rows = 48 frames
-    // Row 0: Walk up (frames 0-7)
-    // Row 1: Walk left (frames 8-15)
-    // Row 2: Walk down (frames 16-23)
-    // Row 3: Walk right (frames 24-31)
+    // Create player animations for LPC Universal sprite sheet
+    // LPC Universal format: 13 columns x 21 rows = 273 frames
+    // Rows 8-11 contain walk animations (9 frames each)
+    // Row 8: Walk up
+    // Row 9: Walk left
+    // Row 10: Walk down
+    // Row 11: Walk right
 
     this.anims.create({
       key: 'player_walk_up',
-      frames: this.anims.generateFrameNumbers('player', { start: 0, end: 7 }),
+      frames: this.anims.generateFrameNumbers('player', { start: 104, end: 112 }),
       frameRate: 10,
       repeat: -1
     });
 
     this.anims.create({
       key: 'player_walk_left',
-      frames: this.anims.generateFrameNumbers('player', { start: 8, end: 15 }),
+      frames: this.anims.generateFrameNumbers('player', { start: 117, end: 125 }),
       frameRate: 10,
       repeat: -1
     });
 
     this.anims.create({
       key: 'player_walk_down',
-      frames: this.anims.generateFrameNumbers('player', { start: 16, end: 23 }),
+      frames: this.anims.generateFrameNumbers('player', { start: 130, end: 138 }),
       frameRate: 10,
       repeat: -1
     });
 
     this.anims.create({
       key: 'player_walk_right',
-      frames: this.anims.generateFrameNumbers('player', { start: 24, end: 31 }),
+      frames: this.anims.generateFrameNumbers('player', { start: 143, end: 151 }),
       frameRate: 10,
       repeat: -1
     });
 
     this.anims.create({
       key: 'player_idle_down',
-      frames: [{ key: 'player', frame: 16 }],
+      frames: [{ key: 'player', frame: 134 }],
       frameRate: 1
     });
 
