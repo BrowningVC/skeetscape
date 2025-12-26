@@ -1,32 +1,124 @@
+/* ====================================
+   2006 RuneScape-Styled Game/Auth Page
+   ==================================== */
+
+/* CSS Reset */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* Body and Background - Match Landing Page */
 body {
-  font-family: 'Arial', sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-family: 'MedievalSharp', 'Georgia', serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
 }
+
+/* Parchment Background Layer - Same as Landing */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+
+  /* Parchment texture using CSS gradients */
+  background:
+    /* Noise texture overlay */
+    repeating-linear-gradient(
+      0deg,
+      rgba(139, 111, 71, 0.03) 0px,
+      rgba(200, 168, 130, 0.03) 1px,
+      rgba(139, 111, 71, 0.03) 2px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(139, 111, 71, 0.03) 0px,
+      rgba(200, 168, 130, 0.03) 1px,
+      rgba(139, 111, 71, 0.03) 2px
+    ),
+    /* Parchment gradient */
+    linear-gradient(to bottom, #D4C4A8 0%, #C8A882 50%, #B89968 100%);
+
+  /* Vignette effect for aged look */
+  box-shadow: inset 0 0 200px rgba(74, 60, 47, 0.3);
+}
+
+/* Load medieval font */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=MedievalSharp&display=swap');
 
 #app {
   width: 100%;
-  max-width: 800px;
+  max-width: 900px;
+  padding: 20px;
 }
 
+/* Auth Container - Medieval Style */
 #auth-container {
-  background: white;
-  border-radius: 10px;
-  padding: 40px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-  max-width: 400px;
+  background: rgba(200, 168, 130, 0.95);
+  border: 4px solid #8B6F47;
+  border-radius: 8px;
+  padding: 50px 40px;
+  max-width: 450px;
   margin: 0 auto;
+
+  /* Ornate border effect using multiple box-shadows */
+  box-shadow:
+    /* Inner highlight */
+    inset 2px 2px 4px rgba(255, 255, 255, 0.2),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.3),
+    /* Outer shadow for depth */
+    0 8px 16px rgba(0, 0, 0, 0.4),
+    0 0 0 8px rgba(139, 111, 71, 0.3),
+    0 0 0 12px rgba(107, 92, 77, 0.2);
+
+  animation: fadeIn 0.6s ease-out;
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Auth Logo */
+.auth-logo {
+  text-align: center;
+  margin-bottom: 30px;
+  padding-bottom: 25px;
+  border-bottom: 3px solid rgba(139, 111, 71, 0.4);
+}
+
+.auth-logo-img {
+  max-width: 100%;
+  height: auto;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+  animation: logoGlow 3s ease-in-out infinite;
+}
+
+@keyframes logoGlow {
+  0%, 100% {
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 4px 12px rgba(212, 175, 55, 0.6));
+  }
+}
+
+/* Form Display Toggle */
 .auth-form {
   display: none;
 }
@@ -35,76 +127,250 @@ body {
   display: block;
 }
 
+/* Form Heading */
 .auth-form h2 {
-  margin-bottom: 20px;
-  color: #333;
+  font-family: 'Cinzel', serif;
+  font-size: 32px;
+  margin-bottom: 30px;
+  color: #4A3C2F;
   text-align: center;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: 2px;
 }
 
+/* Input Fields - Medieval Style */
 .auth-form input {
   width: 100%;
-  padding: 12px;
-  margin-bottom: 15px;
-  border: 2px solid #ddd;
-  border-radius: 5px;
-  font-size: 14px;
-  transition: border-color 0.3s;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  border: none;
+  border-radius: 4px;
+  font-size: 15px;
+  font-family: 'Georgia', serif;
+
+  /* Inset stone effect */
+  background: rgba(255, 255, 255, 0.9);
+  border-top: 2px solid #8B6F47;
+  border-left: 2px solid #8B6F47;
+  border-right: 2px solid #C8A882;
+  border-bottom: 2px solid #C8A882;
+
+  box-shadow:
+    inset 2px 2px 4px rgba(0, 0, 0, 0.2),
+    0 1px 0 rgba(255, 255, 255, 0.3);
+
+  transition: all 0.2s;
 }
 
 .auth-form input:focus {
   outline: none;
-  border-color: #667eea;
+  background: rgba(255, 255, 255, 1);
+  border-top-color: #D4AF37;
+  border-left-color: #D4AF37;
+  box-shadow:
+    inset 2px 2px 4px rgba(0, 0, 0, 0.15),
+    0 0 8px rgba(212, 175, 55, 0.4);
 }
 
+.auth-form input::placeholder {
+  color: #8B6F47;
+  opacity: 0.7;
+}
+
+/* Buttons - Classic RS Beveled Style */
 .auth-form button {
   width: 100%;
-  padding: 12px;
-  background: #667eea;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  font-weight: bold;
+  padding: 16px;
+  margin-top: 10px;
   cursor: pointer;
-  transition: background 0.3s;
+  position: relative;
+  font-family: 'Cinzel', serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 2px;
+
+  /* Stone texture background using gradients */
+  background:
+    linear-gradient(135deg,
+      rgba(155, 139, 122, 0.3) 0%,
+      transparent 50%,
+      rgba(74, 60, 47, 0.3) 100%
+    ),
+    linear-gradient(to bottom,
+      #9B8B7A 0%,
+      #7B6B5A 50%,
+      #6B5C4D 100%
+    );
+
+  /* Beveled 3D borders (classic RS technique) */
+  border: none;
+  border-top: 3px solid #BAA58C;
+  border-left: 3px solid #BAA58C;
+  border-right: 3px solid #4A3C2F;
+  border-bottom: 3px solid #4A3C2F;
+  border-radius: 6px;
+
+  /* Text styling */
+  color: #FFF;
+  text-shadow:
+    0px 2px 0px #4A3C2F,
+    0px -1px 0px #BAA58C,
+    0 3px 6px rgba(0, 0, 0, 0.5);
+
+  /* Shadow for depth */
+  box-shadow:
+    0 4px 0 #4A3C2F,
+    0 6px 12px rgba(0, 0, 0, 0.4);
+
+  transition: all 0.1s ease;
 }
 
 .auth-form button:hover {
-  background: #5568d3;
+  /* Gold accent on hover */
+  border-top-color: #D4AF37;
+  border-left-color: #D4AF37;
+  background:
+    linear-gradient(135deg,
+      rgba(212, 175, 55, 0.2) 0%,
+      transparent 50%,
+      rgba(74, 60, 47, 0.3) 100%
+    ),
+    linear-gradient(to bottom,
+      #A59B8A 0%,
+      #8B7B6A 50%,
+      #7B6C5D 100%
+    );
+
+  transform: translateY(-2px);
+  box-shadow:
+    0 6px 0 #4A3C2F,
+    0 8px 16px rgba(0, 0, 0, 0.5);
 }
 
+.auth-form button:active {
+  transform: translateY(2px);
+  box-shadow:
+    0 2px 0 #4A3C2F,
+    0 3px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Switch Form Text */
 .switch-form {
   text-align: center;
-  margin-top: 15px;
-  color: #666;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 2px solid rgba(139, 111, 71, 0.3);
+  color: #6B5C4D;
   font-size: 14px;
+  font-family: 'Georgia', serif;
 }
 
 .switch-form span {
-  color: #667eea;
+  color: #D4AF37;
   cursor: pointer;
   font-weight: bold;
+  text-decoration: none;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s;
 }
 
 .switch-form span:hover {
-  text-decoration: underline;
+  color: #FFD700;
+  text-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
 }
 
+/* Error Messages */
 .error {
-  color: #e74c3c;
+  color: #8B0000;
+  background: rgba(255, 200, 200, 0.3);
+  border: 2px solid #8B0000;
+  border-radius: 4px;
+  padding: 10px;
   text-align: center;
-  margin-top: 10px;
-  font-size: 14px;
+  margin-top: 15px;
+  font-size: 13px;
+  font-weight: bold;
   min-height: 20px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+.error:empty {
+  display: none;
+}
+
+/* Game Container */
 #game-container {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
 }
 
+/* Canvas Styling */
 canvas {
-  border-radius: 10px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  border: 4px solid #8B6F47;
+  border-radius: 8px;
+  box-shadow:
+    0 8px 16px rgba(0, 0, 0, 0.4),
+    0 0 0 8px rgba(139, 111, 71, 0.3);
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  #auth-container {
+    padding: 35px 25px;
+    margin: 20px;
+  }
+
+  .auth-form h2 {
+    font-size: 26px;
+  }
+
+  .auth-form input {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+
+  .auth-form button {
+    padding: 14px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  #auth-container {
+    padding: 30px 20px;
+    margin: 10px;
+  }
+
+  .auth-form h2 {
+    font-size: 22px;
+  }
+
+  .auth-form input {
+    padding: 10px 12px;
+  }
+
+  .auth-form button {
+    padding: 12px;
+    font-size: 15px;
+  }
+}
+
+/* Accessibility - Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  #auth-container,
+  .auth-form button {
+    animation: none;
+  }
+
+  * {
+    transition: none !important;
+  }
 }

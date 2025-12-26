@@ -151,6 +151,7 @@ body.fade-out {
   image-rendering: pixelated;
   image-rendering: -moz-crisp-edges;
   image-rendering: crisp-edges;
+  z-index: 2; /* Player in front */
 
   /* Walk down animation - Row 10, frames 130-138 (9 frames) */
   animation:
@@ -182,6 +183,7 @@ body.fade-out {
   image-rendering: pixelated;
   image-rendering: -moz-crisp-edges;
   image-rendering: crisp-edges;
+  z-index: 1; /* Goblin behind player */
 
   /* Walk animation - Row 1, frames 11-19 (9 frames) */
   animation:

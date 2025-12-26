@@ -16,19 +16,19 @@
 
   <!-- Shadow layers for depth -->
   <text x="300" y="80" font-family="Georgia, serif" font-size="72" font-weight="bold" text-anchor="middle" fill="#4A3C2F" opacity="0.6">
-    PIXEL MMO
+    SkeetScape
   </text>
   <text x="298" y="78" font-family="Georgia, serif" font-size="72" font-weight="bold" text-anchor="middle" fill="#6B5C4D" opacity="0.8">
-    PIXEL MMO
+    SkeetScape
   </text>
 
   <!-- Main text with gold gradient -->
   <text x="296" y="76" font-family="Georgia, serif" font-size="72" font-weight="bold" text-anchor="middle" fill="url(#goldGradient)" filter="url(#glow)">
-    PIXEL MMO
+    SkeetScape
   </text>
 
   <!-- Highlight -->
   <text x="296" y="76" font-family="Georgia, serif" font-size="72" font-weight="bold" text-anchor="middle" fill="none" stroke="#FFE55C" stroke-width="1" opacity="0.5">
-    PIXEL MMO
+    SkeetScape
   </text>
 </svg>
