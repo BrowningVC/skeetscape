@@ -53,6 +53,7 @@ export default class GameScene extends Phaser.Scene {
     grassTile.setDepth(-2); // Behind everything
 
     const graphics = this.add.graphics();
+    graphics.setDepth(0.5); // Above water (0) but below fishing spots (1) - for buildings, farm, decorations
 
     // River with LPC animated water tiles
     const riverY = 180;
