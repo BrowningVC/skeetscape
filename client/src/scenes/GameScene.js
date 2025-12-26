@@ -55,19 +55,17 @@ export default class GameScene extends Phaser.Scene {
     const graphics = this.add.graphics();
     graphics.setDepth(0.5); // Above water (0) but below fishing spots (1) - for buildings, farm, decorations
 
-    // River with LPC animated water tiles
+    // River with solid water
     const riverY = 180;
     const riverHeight = 80;
     const riverX = 200;
     const riverWidth = 400;
 
-    // Use the large water tile from the LPC water tileset (bottom right area)
-    // The tileset has water tiles around 384x96 pixels in the bottom right
-    const waterTile = this.add.tileSprite(riverX, riverY, riverWidth, riverHeight, 'water_animate');
-    waterTile.setOrigin(0, 0);
-    waterTile.setDepth(0); // Above grass (-2) and stone paths (-1)
-    // Crop to use the main water area from the tileset
-    waterTile.setTilePosition(384, 192);
+    // Create solid water rectangle
+    const waterGraphics = this.add.graphics();
+    waterGraphics.setDepth(0); // Above grass (-2) and stone paths (-1)
+    waterGraphics.fillStyle(0x4da6ff, 1); // Nice water blue color
+    waterGraphics.fillRect(riverX, riverY, riverWidth, riverHeight);
 
     // River banks (darker)
     graphics.fillStyle(0x5d4037, 1);
