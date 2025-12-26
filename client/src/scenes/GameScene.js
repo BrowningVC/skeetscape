@@ -22,10 +22,7 @@ export default class GameScene extends Phaser.Scene {
   create() {
     console.log('🎮 GameScene created');
 
-    // Create simple background
-    this.cameras.main.setBackgroundColor('#8fbc8f');
-
-    // Draw simple map zones
+    // Draw map zones (grass tileset provides background)
     this.drawMapZones();
 
     // Set up input

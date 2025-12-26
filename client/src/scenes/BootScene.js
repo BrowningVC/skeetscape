@@ -50,8 +50,8 @@ export default class BootScene extends Phaser.Scene {
     const tilesetsPath = 'assets/tilesets/';
 
     // Load character sprite sheets (64x64 LPC format)
-    console.log('📦 Loading LPC player sprite from:', lpcPath + 'player_body_clean.png');
-    this.load.spritesheet('player', lpcPath + 'player_body_clean.png', {
+    console.log('📦 Loading LPC player sprite from:', lpcPath + 'player_spritesheet.png');
+    this.load.spritesheet('player', lpcPath + 'player_spritesheet.png', {
       frameWidth: 64,
       frameHeight: 64
     });
@@ -78,38 +78,39 @@ export default class BootScene extends Phaser.Scene {
 
   create() {
     // Create player animations for LPC sprite sheet
-    // Standard LPC format: 13 columns x 46 rows
-    // Rows 8-11 contain walk animations (9 frames each)
-    // Row 8: Walk up
-    // Row 9: Walk left
-    // Row 10: Walk down
-    // Row 11: Walk right
+    // LPC format: 8 columns x 6 rows = 48 frames total
+    // Each row has 8 frames
+    // Row 0: Walk up
+    // Row 1: Walk left
+    // Row 2: Walk down
+    // Row 3: Walk right
+    // Row 4-5: Other animations
 
-    // Walking animations - 9 frames per direction
+    // Walking animations - 8 frames per direction
     this.anims.create({
       key: 'player_walk_up',
-      frames: this.anims.generateFrameNumbers('player', { start: 104, end: 112 }),
+      frames: this.anims.generateFrameNumbers('player', { start: 0, end: 7 }),
       frameRate: 10,
       repeat: -1
     });
 
     this.anims.create({
       key: 'player_walk_left',
-      frames: this.anims.generateFrameNumbers('player', { start: 117, end: 125 }),
+      frames: this.anims.generateFrameNumbers('player', { start: 8, end: 15 }),
       frameRate: 10,
       repeat: -1
     });
 
     this.anims.create({
       key: 'player_walk_down',
-      frames: this.anims.generateFrameNumbers('player', { start: 130, end: 138 }),
+      frames: this.anims.generateFrameNumbers('player', { start: 16, end: 23 }),
       frameRate: 10,
       repeat: -1
     });
 
     this.anims.create({
       key: 'player_walk_right',
-      frames: this.anims.generateFrameNumbers('player', { start: 143, end: 151 }),
+      frames: this.anims.generateFrameNumbers('player', { start: 24, end: 31 }),
       frameRate: 10,
       repeat: -1
     });
@@ -117,7 +118,7 @@ export default class BootScene extends Phaser.Scene {
     // Idle animation (use middle frame of walk down for stable idle pose)
     this.anims.create({
       key: 'player_idle_down',
-      frames: [{ key: 'player', frame: 134 }],
+      frames: [{ key: 'player', frame: 16 }],
       frameRate: 1
     });
 
