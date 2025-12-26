@@ -49,11 +49,11 @@ export default class BootScene extends Phaser.Scene {
     const lpcPath = 'assets/lpc/';
     const tilesetsPath = 'assets/tilesets/';
 
-    // Load character sprite sheets (32x32 Cainos format - simpler, no green background)
-    console.log('📦 Loading Cainos player sprite from:', tilesetsPath + 'player.png');
-    this.load.spritesheet('player', tilesetsPath + 'player.png', {
-      frameWidth: 32,
-      frameHeight: 32
+    // Load character sprite sheets (64x64 LPC format with multiple characters)
+    console.log('📦 Loading LPC player sprite from:', lpcPath + 'player_spritesheet.png');
+    this.load.spritesheet('player', lpcPath + 'player_spritesheet.png', {
+      frameWidth: 64,
+      frameHeight: 64
     });
 
     // Monster sprite will be created as placeholder in createPlaceholderAssets()
@@ -74,36 +74,44 @@ export default class BootScene extends Phaser.Scene {
   }
 
   create() {
-    // Create player animations for Cainos sprite sheet
-    // Cainos format: 4 frames (down, left, right, up) - simple static sprites
-    // For now just use frame 0 (down) for all animations
+    // Create player animations for LPC sprite sheet
+    // LPC format: 8 columns x 6 rows = 48 frames
+    // Row 0: Walk up (frames 0-7)
+    // Row 1: Walk left (frames 8-15)
+    // Row 2: Walk down (frames 16-23)
+    // Row 3: Walk right (frames 24-31)
+
     this.anims.create({
       key: 'player_walk_up',
-      frames: [{ key: 'player', frame: 3 }],
-      frameRate: 1
+      frames: this.anims.generateFrameNumbers('player', { start: 0, end: 7 }),
+      frameRate: 10,
+      repeat: -1
     });
 
     this.anims.create({
       key: 'player_walk_left',
-      frames: [{ key: 'player', frame: 1 }],
-      frameRate: 1
+      frames: this.anims.generateFrameNumbers('player', { start: 8, end: 15 }),
+      frameRate: 10,
+      repeat: -1
     });
 
     this.anims.create({
       key: 'player_walk_down',
-      frames: [{ key: 'player', frame: 0 }],
-      frameRate: 1
+      frames: this.anims.generateFrameNumbers('player', { start: 16, end: 23 }),
+      frameRate: 10,
+      repeat: -1
     });
 
     this.anims.create({
       key: 'player_walk_right',
-      frames: [{ key: 'player', frame: 2 }],
-      frameRate: 1
+      frames: this.anims.generateFrameNumbers('player', { start: 24, end: 31 }),
+      frameRate: 10,
+      repeat: -1
     });
 
     this.anims.create({
       key: 'player_idle_down',
-      frames: [{ key: 'player', frame: 0 }],
+      frames: [{ key: 'player', frame: 16 }],
       frameRate: 1
     });
 
