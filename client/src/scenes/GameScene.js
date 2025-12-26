@@ -207,24 +207,29 @@ export default class GameScene extends Phaser.Scene {
 
     // River collision zone (full river area)
     const riverCollision = this.add.rectangle(riverX + riverWidth/2, riverY + riverHeight/2, riverWidth, riverHeight);
+    riverCollision.setVisible(false); // Invisible collision box
     this.physics.add.existing(riverCollision, true);
     this.collisionZones.add(riverCollision);
 
-    // Town building collisions
-    const building1 = this.add.rectangle(townX + 90, townY + 35, 60, 50);
+    // Town building collisions (centers must match visual buildings)
+    const building1 = this.add.rectangle(townX + 90, townY + 45, 60, 50);
+    building1.setVisible(false); // Invisible collision box
     this.physics.add.existing(building1, true);
     this.collisionZones.add(building1);
 
-    const building2 = this.add.rectangle(townX + 190, townY + 35, 60, 50);
+    const building2 = this.add.rectangle(townX + 190, townY + 45, 60, 50);
+    building2.setVisible(false); // Invisible collision box
     this.physics.add.existing(building2, true);
     this.collisionZones.add(building2);
 
     const building3 = this.add.rectangle(townX + 140, townY + 125, 60, 50);
+    building3.setVisible(false); // Invisible collision box
     this.physics.add.existing(building3, true);
     this.collisionZones.add(building3);
 
     // Farm building collision
     const farmBuilding = this.add.rectangle(farmX + 140, farmY + 130, 280, 260);
+    farmBuilding.setVisible(false); // Invisible collision box
     this.physics.add.existing(farmBuilding, true);
     this.collisionZones.add(farmBuilding);
   }
