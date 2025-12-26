@@ -430,6 +430,10 @@ export default class GameScene extends Phaser.Scene {
     this.player = this.physics.add.sprite(playerData.x, playerData.y, 'player');
     this.player.setCollideWorldBounds(true);
     this.player.setDepth(10); // Ensure player is above ground
+
+    // Set scale to 0.5 to make the 64x64 sprite appear as 32x32
+    this.player.setScale(0.5);
+
     console.log('✅ Player sprite created, frame count:', this.player.texture.frameTotal);
 
     // Name tag
