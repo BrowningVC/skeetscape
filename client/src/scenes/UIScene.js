@@ -51,8 +51,8 @@ export default class UIScene extends Phaser.Scene {
       this.toggleInventory();
     });
 
-    // Toggle stats with 'S' key
-    this.input.keyboard.on('keydown-S', () => {
+    // Toggle stats with Tab key
+    this.input.keyboard.on('keydown-TAB', () => {
       this.toggleStats();
     });
   }
@@ -142,7 +142,7 @@ export default class UIScene extends Phaser.Scene {
     const buttonSpacing = 140;
 
     // Stats button
-    this.statsButton = this.add.text(GAME_WIDTH - 250, buttonY, '📊 Stats (S)', {
+    this.statsButton = this.add.text(GAME_WIDTH - 250, buttonY, '📊 Stats (Tab)', {
       font: 'bold 14px Arial',
       fill: '#ffffff',
       stroke: '#000000',

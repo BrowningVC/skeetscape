@@ -75,9 +75,9 @@ export default class GameScene extends Phaser.Scene {
     graphics.fillRect(riverX, riverY - 4, riverWidth, 4);
     graphics.fillRect(riverX, riverY + riverHeight, riverWidth, 4);
 
-    // Town buildings
+    // Town buildings (moved higher to create walkway between town and river)
     const townX = 100;
-    const townY = 80;
+    const townY = 30;
 
     // Stone paths in town - Cainos stone tileset
     const stonePath = this.add.tileSprite(townX + 40, townY, 200, 160, 'tileset_stone');
@@ -183,7 +183,7 @@ export default class GameScene extends Phaser.Scene {
     }
 
     // Add text labels
-    this.add.text(200, 120, 'TOWN', {
+    this.add.text(200, 70, 'TOWN', {
       font: 'bold 16px Arial',
       fill: '#333',
       stroke: '#fff',
@@ -416,6 +416,10 @@ export default class GameScene extends Phaser.Scene {
       const tree = this.trees.get(data.treeId);
       if (tree) {
         tree.setTexture('tree_stump');
+        // Remove collision when tree is chopped
+        if (tree.body) {
+          tree.body.enable = false;
+        }
       }
     });
 
@@ -424,6 +428,10 @@ export default class GameScene extends Phaser.Scene {
       const tree = this.trees.get(data.treeId);
       if (tree) {
         tree.setTexture('tree');
+        // Re-enable collision when tree respawns
+        if (tree.body) {
+          tree.body.enable = true;
+        }
       }
     });
 
