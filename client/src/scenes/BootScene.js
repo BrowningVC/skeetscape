@@ -38,12 +38,18 @@ export default class BootScene extends Phaser.Scene {
       progressBox.destroy();
       loadingText.destroy();
       percentText.destroy();
+      console.log('✅ All assets loaded successfully');
+    });
+
+    this.load.on('loaderror', (file) => {
+      console.error('❌ Failed to load:', file.src);
     });
 
     // Load Cainos pixel art assets
     const assetPath = 'assets/sprites/Pixel Art Top Down - Basic v1.2.2/Texture/';
 
     // Load sprite sheets
+    console.log('📦 Loading player sprite from:', assetPath + 'TX Player.png');
     this.load.spritesheet('player', assetPath + 'TX Player.png', {
       frameWidth: 32,
       frameHeight: 32

@@ -404,8 +404,10 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createPlayer(playerData) {
+    console.log('🎮 Creating player with sprite:', 'player');
     this.player = this.physics.add.sprite(playerData.x, playerData.y, 'player');
     this.player.setCollideWorldBounds(true);
+    console.log('✅ Player sprite created, frame count:', this.player.texture.frameTotal);
 
     // Name tag
     this.player.nameText = this.add.text(this.player.x, this.player.y - 30, playerData.username || 'Player', {
