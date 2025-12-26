@@ -538,25 +538,30 @@ export default class GameScene extends Phaser.Scene {
 
     this.player.setVelocity(velocityX, velocityY);
 
-    // Update player animation based on movement
-    if (velocityX !== 0 || velocityY !== 0) {
-      if (Math.abs(velocityY) > Math.abs(velocityX)) {
-        // Moving more vertically
-        if (velocityY < 0) {
-          this.player.anims.play('player_walk_up', true);
+    // Update player animation based on movement (wrapped in try-catch to prevent breaking movement)
+    try {
+      if (velocityX !== 0 || velocityY !== 0) {
+        if (Math.abs(velocityY) > Math.abs(velocityX)) {
+          // Moving more vertically
+          if (velocityY < 0) {
+            this.player.anims.play('player_walk_up', true);
+          } else {
+            this.player.anims.play('player_walk_down', true);
+          }
         } else {
-          this.player.anims.play('player_walk_down', true);
+          // Moving more horizontally
+          if (velocityX < 0) {
+            this.player.anims.play('player_walk_left', true);
+          } else {
+            this.player.anims.play('player_walk_right', true);
+          }
         }
       } else {
-        // Moving more horizontally
-        if (velocityX < 0) {
-          this.player.anims.play('player_walk_left', true);
-        } else {
-          this.player.anims.play('player_walk_right', true);
-        }
+        this.player.anims.play('player_idle_down', true);
       }
-    } else {
-      this.player.anims.play('player_idle_down', true);
+    } catch (err) {
+      // Animation error - log it but don't break movement
+      console.warn('Animation error:', err);
     }
 
     // Update name tag position
