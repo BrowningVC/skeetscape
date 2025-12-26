@@ -21,16 +21,11 @@ export default class GroundItem extends Phaser.GameObjects.Container {
       this.sendToBack(this.glow);
     }
 
-    // Create item icon/text
-    const displayIcon = this.getDisplayIcon(groundItemData.itemId);
-    this.itemText = scene.add.text(0, 0, displayIcon, {
-      font: 'bold 16px Arial',
-      fill: '#ffffff',
-      stroke: '#000000',
-      strokeThickness: 2
-    });
-    this.itemText.setOrigin(0.5);
-    this.add(this.itemText);
+    // Create item sprite
+    const spriteKey = `item_${groundItemData.itemId}`;
+    this.itemSprite = scene.add.image(0, 0, spriteKey);
+    this.itemSprite.setDisplaySize(20, 20); // Scale to fit in circle
+    this.add(this.itemSprite);
 
     // Show quantity if > 1
     if (this.quantity > 1) {

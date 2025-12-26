@@ -253,5 +253,214 @@ export default class BootScene extends Phaser.Scene {
     fireGraphics.fillTriangle(16, 16, 14, 20, 18, 20);
     fireGraphics.generateTexture('fire', 32, 32);
     fireGraphics.destroy();
+
+    // Create item sprites (16x16 pixel art)
+    this.createItemSprites();
+  }
+
+  createItemSprites() {
+    const size = 16;
+
+    // Bones - white skull and bones
+    const bones = this.add.graphics();
+    bones.fillStyle(0xeeeeee);
+    bones.fillRect(6, 4, 4, 4); // skull top
+    bones.fillRect(5, 8, 6, 3); // skull jaw
+    bones.fillStyle(0x000000);
+    bones.fillRect(6, 6, 1, 1); // left eye
+    bones.fillRect(9, 6, 1, 1); // right eye
+    bones.fillStyle(0xdddddd);
+    bones.fillRect(3, 12, 10, 2); // bone
+    bones.fillRect(7, 11, 2, 4); // bone cross
+    bones.generateTexture('item_bones', size, size);
+    bones.destroy();
+
+    // Raw meat - red meat chunk
+    const rawMeat = this.add.graphics();
+    rawMeat.fillStyle(0x8b0000);
+    rawMeat.fillRect(4, 5, 8, 6);
+    rawMeat.fillStyle(0xb22222);
+    rawMeat.fillRect(5, 6, 6, 4);
+    rawMeat.fillStyle(0xdc143c);
+    rawMeat.fillRect(6, 7, 4, 2);
+    rawMeat.fillStyle(0xffffff);
+    rawMeat.fillRect(5, 8, 2, 1); // fat
+    rawMeat.generateTexture('item_raw_meat', size, size);
+    rawMeat.destroy();
+
+    // Coins - gold stack
+    const coins = this.add.graphics();
+    coins.fillStyle(0xffd700);
+    coins.fillCircle(8, 8, 5);
+    coins.fillStyle(0xffed4e);
+    coins.fillCircle(8, 7, 3);
+    coins.fillStyle(0xffa500);
+    coins.fillRect(7, 10, 2, 2); // coin stack shadow
+    coins.fillRect(9, 10, 2, 2);
+    coins.generateTexture('item_coins', size, size);
+    coins.destroy();
+
+    // Healing potion - red bottle
+    const healingPotion = this.add.graphics();
+    healingPotion.fillStyle(0x555555);
+    healingPotion.fillRect(7, 3, 2, 2); // cork
+    healingPotion.fillStyle(0x8b0000);
+    healingPotion.fillRect(6, 5, 4, 7); // bottle
+    healingPotion.fillStyle(0xff0000);
+    healingPotion.fillRect(7, 6, 2, 5); // potion
+    healingPotion.fillStyle(0xff6666);
+    healingPotion.fillRect(7, 6, 1, 2); // highlight
+    healingPotion.generateTexture('item_healing_potion', size, size);
+    healingPotion.destroy();
+
+    // Bronze sword - brown/orange blade
+    const bronzeSword = this.add.graphics();
+    bronzeSword.fillStyle(0xcd7f32);
+    bronzeSword.fillRect(8, 2, 2, 10); // blade
+    bronzeSword.fillStyle(0xb8860b);
+    bronzeSword.fillRect(9, 2, 1, 8); // blade highlight
+    bronzeSword.fillStyle(0x8b4513);
+    bronzeSword.fillRect(7, 11, 4, 3); // hilt
+    bronzeSword.fillStyle(0xdaa520);
+    bronzeSword.fillRect(6, 12, 6, 1); // guard
+    bronzeSword.generateTexture('item_bronze_sword', size, size);
+    bronzeSword.destroy();
+
+    // Leather armor - brown chestplate
+    const leatherArmor = this.add.graphics();
+    leatherArmor.fillStyle(0x8b4513);
+    leatherArmor.fillRect(5, 4, 6, 8); // body
+    leatherArmor.fillRect(4, 6, 2, 3); // left arm
+    leatherArmor.fillRect(10, 6, 2, 3); // right arm
+    leatherArmor.fillStyle(0xa0522d);
+    leatherArmor.fillRect(6, 5, 4, 6); // chest
+    leatherArmor.fillStyle(0x654321);
+    leatherArmor.fillRect(7, 7, 2, 2); // center detail
+    leatherArmor.generateTexture('item_leather_armor', size, size);
+    leatherArmor.destroy();
+
+    // Fish - gray/blue fish
+    const fish = this.add.graphics();
+    fish.fillStyle(0x4682b4);
+    fish.fillRect(4, 7, 8, 3); // body
+    fish.fillRect(2, 8, 2, 1); // head
+    fish.fillStyle(0x87ceeb);
+    fish.fillRect(5, 8, 6, 1); // highlight
+    fish.fillRect(10, 6, 2, 1); // tail top
+    fish.fillRect(10, 10, 2, 1); // tail bottom
+    fish.fillStyle(0x000000);
+    fish.fillRect(3, 8, 1, 1); // eye
+    fish.generateTexture('item_fish', size, size);
+    fish.destroy();
+
+    // Logs - brown wood
+    const logs = this.add.graphics();
+    logs.fillStyle(0x8b4513);
+    logs.fillRect(3, 6, 10, 4);
+    logs.fillStyle(0xa0522d);
+    logs.fillRect(4, 7, 8, 2);
+    logs.fillStyle(0x654321);
+    logs.fillRect(3, 7, 1, 2); // ring left
+    logs.fillRect(12, 7, 1, 2); // ring right
+    logs.fillRect(7, 7, 1, 2); // ring middle
+    logs.generateTexture('item_logs', size, size);
+    logs.destroy();
+
+    // Silver ore - gray/silver rock
+    const silverOre = this.add.graphics();
+    silverOre.fillStyle(0x808080);
+    silverOre.fillRect(4, 5, 8, 7);
+    silverOre.fillStyle(0xc0c0c0);
+    silverOre.fillRect(5, 6, 6, 5);
+    silverOre.fillStyle(0xe8e8e8);
+    silverOre.fillRect(6, 7, 4, 3);
+    silverOre.fillStyle(0xa9a9a9);
+    silverOre.fillRect(4, 11, 8, 1); // shadow
+    silverOre.generateTexture('item_silver_ore', size, size);
+    silverOre.destroy();
+
+    // Ruby - red gem
+    const ruby = this.add.graphics();
+    ruby.fillStyle(0x8b0000);
+    ruby.fillRect(7, 5, 4, 6);
+    ruby.fillRect(6, 7, 6, 2);
+    ruby.fillStyle(0xff0000);
+    ruby.fillRect(8, 6, 2, 4);
+    ruby.fillStyle(0xff6666);
+    ruby.fillRect(8, 6, 1, 2); // highlight
+    ruby.generateTexture('item_ruby', size, size);
+    ruby.destroy();
+
+    // Magic logs - glowing purple wood
+    const magicLogs = this.add.graphics();
+    magicLogs.fillStyle(0x4b0082);
+    magicLogs.fillRect(3, 6, 10, 4);
+    magicLogs.fillStyle(0x9370db);
+    magicLogs.fillRect(4, 7, 8, 2);
+    magicLogs.fillStyle(0xda70d6);
+    magicLogs.fillRect(5, 7, 2, 2); // glow
+    magicLogs.fillRect(9, 7, 2, 2); // glow
+    magicLogs.generateTexture('item_magic_logs', size, size);
+    magicLogs.destroy();
+
+    // Diamond - cyan/blue gem
+    const diamond = this.add.graphics();
+    diamond.fillStyle(0x00bfff);
+    diamond.fillRect(7, 4, 4, 8);
+    diamond.fillRect(6, 6, 6, 4);
+    diamond.fillStyle(0x87cefa);
+    diamond.fillRect(8, 5, 2, 6);
+    diamond.fillStyle(0xe0ffff);
+    diamond.fillRect(8, 5, 1, 3); // highlight
+    diamond.generateTexture('item_diamond', size, size);
+    diamond.destroy();
+
+    // Dragon scale - green/red scale
+    const dragonScale = this.add.graphics();
+    dragonScale.fillStyle(0x228b22);
+    dragonScale.fillRect(5, 5, 6, 6);
+    dragonScale.fillStyle(0x32cd32);
+    dragonScale.fillRect(6, 6, 4, 4);
+    dragonScale.fillStyle(0x8b0000);
+    dragonScale.fillRect(7, 7, 2, 2); // red center
+    dragonScale.fillStyle(0x006400);
+    dragonScale.fillRect(5, 5, 2, 2); // dark edge
+    dragonScale.fillRect(9, 9, 2, 2); // dark edge
+    dragonScale.generateTexture('item_dragon_scale', size, size);
+    dragonScale.destroy();
+
+    // Enchanted amulet - purple/gold amulet
+    const enchantedAmulet = this.add.graphics();
+    enchantedAmulet.fillStyle(0xffd700);
+    enchantedAmulet.fillCircle(8, 9, 3); // pendant
+    enchantedAmulet.fillStyle(0x9370db);
+    enchantedAmulet.fillCircle(8, 9, 2); // gem
+    enchantedAmulet.fillStyle(0xffd700);
+    enchantedAmulet.fillRect(6, 4, 1, 5); // chain left
+    enchantedAmulet.fillRect(10, 4, 1, 5); // chain right
+    enchantedAmulet.fillRect(7, 3, 3, 1); // chain top
+    enchantedAmulet.generateTexture('item_enchanted_amulet', size, size);
+    enchantedAmulet.destroy();
+
+    // Partyhats (red, blue, green) - cone-shaped hats
+    ['red', 'blue', 'green'].forEach((color) => {
+      const partyhat = this.add.graphics();
+      const colors = {
+        red: { main: 0xff0000, light: 0xff6666, dark: 0x8b0000 },
+        blue: { main: 0x0000ff, light: 0x6666ff, dark: 0x00008b },
+        green: { main: 0x00ff00, light: 0x66ff66, dark: 0x006400 }
+      };
+      const col = colors[color];
+      partyhat.fillStyle(col.dark);
+      partyhat.fillRect(5, 10, 6, 2); // base
+      partyhat.fillStyle(col.main);
+      partyhat.fillTriangle(8, 3, 4, 12, 12, 12); // cone
+      partyhat.fillStyle(col.light);
+      partyhat.fillTriangle(8, 4, 6, 11, 10, 11); // highlight
+      partyhat.generateTexture(`item_partyhat_${color}`, size, size);
+      partyhat.destroy();
+    });
+
+    console.log('✅ Created pixel art item sprites');
   }
 }
