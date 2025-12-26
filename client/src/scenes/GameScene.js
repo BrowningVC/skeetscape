@@ -543,20 +543,20 @@ export default class GameScene extends Phaser.Scene {
       if (Math.abs(velocityY) > Math.abs(velocityX)) {
         // Moving more vertically
         if (velocityY < 0) {
-          this.player.play('player_walk_up', true);
+          this.player.anims.play('player_walk_up', true);
         } else {
-          this.player.play('player_walk_down', true);
+          this.player.anims.play('player_walk_down', true);
         }
       } else {
         // Moving more horizontally
         if (velocityX < 0) {
-          this.player.play('player_walk_left', true);
+          this.player.anims.play('player_walk_left', true);
         } else {
-          this.player.play('player_walk_right', true);
+          this.player.anims.play('player_walk_right', true);
         }
       }
     } else {
-      this.player.play('player_idle_down', true);
+      this.player.anims.play('player_idle_down', true);
     }
 
     // Update name tag position
