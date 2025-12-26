@@ -48,6 +48,8 @@ class SocketManager {
         console.log('📦 Delivering pending init event to GameScene');
         callback(this.pendingEvents.init);
         delete this.pendingEvents.init;
+        // Don't register another listener for init - we already have one in connect()
+        return;
       }
 
       this.socket.on(event, callback);

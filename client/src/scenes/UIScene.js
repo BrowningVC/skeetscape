@@ -6,6 +6,7 @@ export default class UIScene extends Phaser.Scene {
     super({ key: 'UIScene' });
     this.playerData = null;
     this.inventoryVisible = false;
+    this.statsVisible = false;
   }
 
   create() {
@@ -43,6 +44,11 @@ export default class UIScene extends Phaser.Scene {
     // Toggle inventory with 'I' key
     this.input.keyboard.on('keydown-I', () => {
       this.toggleInventory();
+    });
+
+    // Toggle stats with 'S' key
+    this.input.keyboard.on('keydown-S', () => {
+      this.toggleStats();
     });
   }
 
@@ -124,8 +130,36 @@ export default class UIScene extends Phaser.Scene {
 
     this.updateSkillsPanel();
 
+    // Create HUD buttons
+    this.createHUDButtons();
+  }
+
+  createHUDButtons() {
+    const buttonY = 10;
+    const buttonSpacing = 140;
+
+    // Stats button
+    this.statsButton = this.add.text(GAME_WIDTH - 250, buttonY, '📊 Stats (S)', {
+      font: 'bold 14px Arial',
+      fill: '#ffffff',
+      stroke: '#000000',
+      strokeThickness: 2,
+      backgroundColor: '#00000088',
+      padding: { x: 8, y: 4 }
+    });
+    this.statsButton.setInteractive();
+    this.statsButton.on('pointerdown', () => {
+      this.toggleStats();
+    });
+    this.statsButton.on('pointerover', () => {
+      this.statsButton.setBackgroundColor('#667eea88');
+    });
+    this.statsButton.on('pointerout', () => {
+      this.statsButton.setBackgroundColor('#00000088');
+    });
+
     // Inventory button
-    this.inventoryButton = this.add.text(GAME_WIDTH - 100, 10, '🎒 Inventory (I)', {
+    this.inventoryButton = this.add.text(GAME_WIDTH - 120, buttonY, '🎒 Inventory (I)', {
       font: 'bold 14px Arial',
       fill: '#ffffff',
       stroke: '#000000',
@@ -136,6 +170,12 @@ export default class UIScene extends Phaser.Scene {
     this.inventoryButton.setInteractive();
     this.inventoryButton.on('pointerdown', () => {
       this.toggleInventory();
+    });
+    this.inventoryButton.on('pointerover', () => {
+      this.inventoryButton.setBackgroundColor('#667eea88');
+    });
+    this.inventoryButton.on('pointerout', () => {
+      this.inventoryButton.setBackgroundColor('#00000088');
     });
   }
 
@@ -255,5 +295,122 @@ export default class UIScene extends Phaser.Scene {
     if (this.inventoryTitle) this.inventoryTitle.destroy();
     this.inventoryItems.forEach(item => item.destroy());
     this.inventoryItems = [];
+  }
+
+  toggleStats() {
+    this.statsVisible = !this.statsVisible;
+
+    if (this.statsVisible) {
+      this.showStats();
+    } else {
+      this.hideStats();
+    }
+  }
+
+  showStats() {
+    // Create stats panel
+    const panelX = GAME_WIDTH / 2 - 200;
+    const panelY = 80;
+    const panelWidth = 400;
+    const panelHeight = 350;
+
+    this.statsPanel = this.add.graphics();
+    this.statsPanel.fillStyle(0x333333, 0.95);
+    this.statsPanel.fillRect(panelX, panelY, panelWidth, panelHeight);
+    this.statsPanel.lineStyle(2, 0x667eea);
+    this.statsPanel.strokeRect(panelX, panelY, panelWidth, panelHeight);
+
+    this.statsTitle = this.add.text(GAME_WIDTH / 2, panelY + 20, 'PLAYER STATS', {
+      font: 'bold 20px Arial',
+      fill: '#ffffff'
+    });
+    this.statsTitle.setOrigin(0.5);
+
+    this.statsElements = [];
+    this.renderStats();
+  }
+
+  renderStats() {
+    if (!this.playerData) return;
+
+    const panelX = GAME_WIDTH / 2 - 200;
+    const panelY = 80;
+    const startX = panelX + 30;
+    const startY = panelY + 60;
+    const lineHeight = 30;
+
+    // Player info
+    const username = this.add.text(startX, startY, `Username: ${this.playerData.username}`, {
+      font: 'bold 16px Arial',
+      fill: '#ffffff'
+    });
+    this.statsElements.push(username);
+
+    const userId = this.add.text(startX, startY + lineHeight, `User ID: ${this.playerData.userId}`, {
+      font: '14px Arial',
+      fill: '#aaaaaa'
+    });
+    this.statsElements.push(userId);
+
+    // Health
+    const healthTitle = this.add.text(startX, startY + lineHeight * 2.5, 'Combat Stats', {
+      font: 'bold 16px Arial',
+      fill: '#ff6b6b'
+    });
+    this.statsElements.push(healthTitle);
+
+    const health = this.add.text(startX + 20, startY + lineHeight * 3.5, `Health: ${this.playerData.health}/${this.playerData.maxHealth}`, {
+      font: '14px Arial',
+      fill: '#ffffff'
+    });
+    this.statsElements.push(health);
+
+    // Skills
+    const skillsTitle = this.add.text(startX, startY + lineHeight * 5, 'Skills', {
+      font: 'bold 16px Arial',
+      fill: '#667eea'
+    });
+    this.statsElements.push(skillsTitle);
+
+    const skillLabels = {
+      combat: '⚔️ Combat',
+      fishing: '🎣 Fishing',
+      woodcutting: '🪓 Woodcutting'
+    };
+
+    let skillIndex = 0;
+    ['combat', 'fishing', 'woodcutting'].forEach((skill) => {
+      const skillData = this.playerData.skills[skill];
+      if (skillData) {
+        const skillText = this.add.text(
+          startX + 20,
+          startY + lineHeight * (6 + skillIndex),
+          `${skillLabels[skill]}: Level ${skillData.level} (${skillData.xp} XP)`,
+          {
+            font: '14px Arial',
+            fill: '#ffffff'
+          }
+        );
+        this.statsElements.push(skillText);
+        skillIndex++;
+      }
+    });
+
+    // Instructions
+    const instructions = this.add.text(GAME_WIDTH / 2, panelY + 320, 'Press S to close', {
+      font: '12px Arial',
+      fill: '#aaaaaa'
+    });
+    instructions.setOrigin(0.5);
+    this.statsElements.push(instructions);
+  }
+
+  hideStats() {
+    if (this.statsPanel) this.statsPanel.destroy();
+    if (this.statsTitle) this.statsTitle.destroy();
+    if (this.statsElements) {
+      this.statsElements.forEach(element => element.destroy());
+      this.statsElements = [];
+    }
   }
 }

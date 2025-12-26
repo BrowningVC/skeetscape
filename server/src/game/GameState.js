@@ -5,6 +5,8 @@ class GameState {
     this.trees = new Map(); // treeId -> treeData
     this.fishingSpots = new Map(); // spotId -> spotData
     this.fires = new Map(); // fireId -> fireData
+    this.groundItems = new Map(); // groundItemId -> groundItemData
+    this.nextGroundItemId = 0;
 
     this.initializeWorld();
   }
@@ -25,10 +27,15 @@ class GameState {
         id: `monster_${index}`,
         x: spawn.x,
         y: spawn.y,
+        spawnX: spawn.x, // Store original spawn point
+        spawnY: spawn.y,
         health: 50,
         maxHealth: 50,
         type: 'goblin',
-        lastRespawn: Date.now()
+        lastRespawn: Date.now(),
+        target: null, // Target player socketId
+        lastAttack: 0, // Last attack timestamp
+        attackCooldown: 3000 // 3 seconds between attacks
       });
     });
 
@@ -138,6 +145,11 @@ class GameState {
     if (monster) {
       monster.health = monster.maxHealth;
       monster.lastRespawn = Date.now();
+      monster.target = null;
+      monster.lastAttack = 0;
+      // Reset to spawn position
+      monster.x = monster.spawnX;
+      monster.y = monster.spawnY;
     }
   }
 
@@ -182,6 +194,32 @@ class GameState {
       }
     });
     return nearbyPlayers;
+  }
+
+  // Ground item management
+  addGroundItem(itemId, quantity, x, y) {
+    const groundItemId = `ground_${this.nextGroundItemId++}`;
+    this.groundItems.set(groundItemId, {
+      id: groundItemId,
+      itemId,
+      quantity,
+      x,
+      y,
+      droppedAt: Date.now()
+    });
+    return groundItemId;
+  }
+
+  removeGroundItem(groundItemId) {
+    this.groundItems.delete(groundItemId);
+  }
+
+  getGroundItem(groundItemId) {
+    return this.groundItems.get(groundItemId);
+  }
+
+  getAllGroundItems() {
+    return Array.from(this.groundItems.values());
   }
 }
 

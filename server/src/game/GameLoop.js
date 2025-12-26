@@ -48,10 +48,66 @@ class GameLoop {
   }
 
   updateMonsterAI() {
+    const aggroRange = 150; // Range to detect and aggro players
+    const attackRange = 80; // Range to attack players
+    const leashRange = 300; // Max distance from spawn before returning
+    const now = Date.now();
+
     this.gameState.monsters.forEach((monster) => {
-      // Only move alive monsters
-      if (monster.health > 0) {
-        // Simple random wander
+      // Only update alive monsters
+      if (monster.health <= 0) return;
+
+      // Find nearest player
+      let nearestPlayer = null;
+      let nearestDistance = Infinity;
+
+      this.gameState.players.forEach((player, socketId) => {
+        const distance = Math.sqrt(
+          Math.pow(player.x - monster.x, 2) + Math.pow(player.y - monster.y, 2)
+        );
+        if (distance < nearestDistance) {
+          nearestDistance = distance;
+          nearestPlayer = { socketId, player, distance };
+        }
+      });
+
+      // Check if monster is too far from spawn (leash)
+      const spawnDistance = Math.sqrt(
+        Math.pow(monster.x - monster.spawnX, 2) + Math.pow(monster.y - monster.spawnY, 2)
+      );
+
+      if (spawnDistance > leashRange) {
+        // Return to spawn
+        monster.target = null;
+        const angle = Math.atan2(monster.spawnY - monster.y, monster.spawnX - monster.x);
+        monster.x += Math.cos(angle) * 30;
+        monster.y += Math.sin(angle) * 30;
+        return;
+      }
+
+      // Aggro logic
+      if (nearestPlayer && nearestPlayer.distance <= aggroRange) {
+        monster.target = nearestPlayer.socketId;
+
+        // Move towards player if not in attack range
+        if (nearestPlayer.distance > attackRange) {
+          const angle = Math.atan2(
+            nearestPlayer.player.y - monster.y,
+            nearestPlayer.player.x - monster.x
+          );
+          const moveDistance = 15;
+          monster.x += Math.cos(angle) * moveDistance;
+          monster.y += Math.sin(angle) * moveDistance;
+        }
+        // Attack if in range and cooldown expired
+        else if (now - monster.lastAttack >= monster.attackCooldown) {
+          this.monsterAttackPlayer(monster, nearestPlayer.socketId, nearestPlayer.player);
+          monster.lastAttack = now;
+        }
+      }
+      // No target - random wander
+      else {
+        monster.target = null;
         const moveDistance = 20;
         const angle = Math.random() * Math.PI * 2;
         monster.x += Math.cos(angle) * moveDistance;
@@ -61,6 +117,54 @@ class GameLoop {
         monster.x = Math.max(400, Math.min(800, monster.x));
         monster.y = Math.max(200, Math.min(600, monster.y));
       }
+    });
+  }
+
+  monsterAttackPlayer(monster, socketId, player) {
+    // Calculate damage (3-8 damage)
+    const damage = Math.floor(Math.random() * 6) + 3;
+    player.health = Math.max(0, player.health - damage);
+
+    // Notify player of damage
+    this.io.to(socketId).emit('playerDamaged', {
+      damage,
+      health: player.health,
+      maxHealth: player.maxHealth,
+      monsterId: monster.id
+    });
+
+    // Broadcast to all players for visual effect
+    this.io.emit('playerHit', {
+      socketId,
+      damage,
+      monsterId: monster.id
+    });
+
+    // Check if player died
+    if (player.health <= 0) {
+      this.handlePlayerDeath(socketId, player);
+    }
+  }
+
+  handlePlayerDeath(socketId, player) {
+    // Respawn player at spawn point
+    player.health = player.maxHealth;
+    player.x = 100;
+    player.y = 100;
+
+    // Notify player
+    this.io.to(socketId).emit('playerDied', {
+      message: 'You have died! Respawning...',
+      x: player.x,
+      y: player.y,
+      health: player.health
+    });
+
+    // Broadcast to all players
+    this.io.emit('playerRespawned', {
+      socketId,
+      x: player.x,
+      y: player.y
     });
   }
 

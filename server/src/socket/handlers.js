@@ -44,7 +44,8 @@ module.exports = {
       monsters: gameState.getAllMonsters(),
       trees: gameState.getAllTrees(),
       fishingSpots: gameState.getAllFishingSpots(),
-      fires: gameState.getAllFires()
+      fires: gameState.getAllFires(),
+      groundItems: gameState.getAllGroundItems()
     });
 
     // Broadcast to others that player joined
@@ -64,6 +65,7 @@ module.exports = {
     socket.on('chop', (data) => this.handleChop(socket, io, gameState, data));
     socket.on('useItem', (data) => this.handleUseItem(socket, io, gameState, data));
     socket.on('placeFirepit', (data) => this.handlePlaceFirepit(socket, io, gameState, data));
+    socket.on('pickupGroundItem', (data) => this.handlePickupGroundItem(socket, io, gameState, data));
 
     socket.on('disconnect', () => {
       const player = gameState.getPlayer(socket.id);
@@ -150,7 +152,17 @@ module.exports = {
             rarity: result.loot.rarity
           });
         } else {
-          socket.emit('message', { text: 'Inventory full! Loot lost.' });
+          // Drop item on ground at monster's position
+          const groundItemId = gameState.addGroundItem(
+            result.loot.item_id,
+            result.loot.quantity,
+            monster.x,
+            monster.y
+          );
+          const groundItem = gameState.getGroundItem(groundItemId);
+
+          io.emit('groundItemSpawned', groundItem);
+          socket.emit('message', { text: 'Inventory full! Item dropped on ground.' });
         }
       }
     }
@@ -346,5 +358,46 @@ module.exports = {
 
     socket.emit('inventoryUpdate', { inventory: player.inventory });
     socket.emit('placeFirepitResult', { success: true });
+  },
+
+  handlePickupGroundItem(socket, io, gameState, { groundItemId }) {
+    const player = gameState.getPlayer(socket.id);
+    const groundItem = gameState.getGroundItem(groundItemId);
+
+    if (!player || !groundItem) {
+      return;
+    }
+
+    // Check distance (must be within 100 pixels)
+    const distance = Math.sqrt(
+      Math.pow(player.x - groundItem.x, 2) + Math.pow(player.y - groundItem.y, 2)
+    );
+    if (distance > 100) {
+      socket.emit('pickupResult', { error: 'Too far away' });
+      return;
+    }
+
+    // Try to add to inventory
+    const added = ItemSystem.addToInventory(player, {
+      item_id: groundItem.itemId,
+      quantity: groundItem.quantity
+    });
+
+    if (added) {
+      // Remove from ground
+      gameState.removeGroundItem(groundItemId);
+
+      // Broadcast removal
+      io.emit('groundItemPickedUp', { groundItemId });
+
+      // Update player inventory
+      socket.emit('inventoryUpdate', { inventory: player.inventory });
+      socket.emit('pickupResult', {
+        success: true,
+        item: { item_id: groundItem.itemId, quantity: groundItem.quantity }
+      });
+    } else {
+      socket.emit('pickupResult', { error: 'Inventory full' });
+    }
   }
 };
