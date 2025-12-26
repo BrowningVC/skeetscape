@@ -159,8 +159,9 @@ export default class BootScene extends Phaser.Scene {
 
     this.anims.create({
       key: 'goblin_idle',
-      frames: [{ key: 'goblin', frame: 964 }], // walk_down middle frame
-      frameRate: 1
+      frames: this.anims.generateFrameNumbers('goblin', { start: 960, end: 968 }),
+      frameRate: 2, // Very slow animation for idle
+      repeat: -1
     });
 
     // Goblin slash animations (Row 12-15: Slash up, left, down, right)
@@ -195,8 +196,9 @@ export default class BootScene extends Phaser.Scene {
     // Keep placeholder for backward compatibility
     this.anims.create({
       key: 'monster_idle',
-      frames: [{ key: 'goblin', frame: 964 }],
-      frameRate: 1
+      frames: this.anims.generateFrameNumbers('goblin', { start: 960, end: 968 }),
+      frameRate: 2,
+      repeat: -1
     });
 
     // Debug: Check if sprites loaded correctly
