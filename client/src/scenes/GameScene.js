@@ -76,20 +76,10 @@ export default class GameScene extends Phaser.Scene {
     const townX = 100;
     const townY = 80;
 
-    // Stone paths in town
-    graphics.fillStyle(0x9e9e9e, 1);
-    graphics.fillRect(townX + 40, townY, 200, 16);
-    graphics.fillRect(townX + 40, townY + 80, 200, 16);
-    graphics.fillRect(townX + 40, townY, 16, 160);
-    graphics.fillRect(townX + 224, townY, 16, 160);
-
-    // Path texture
-    graphics.fillStyle(0x757575, 1);
-    for (let i = 0; i < 30; i++) {
-      const px = townX + 40 + Math.random() * 200;
-      const py = townY + Math.random() * 160;
-      graphics.fillRect(px, py, 2, 2);
-    }
+    // Stone paths in town using Cainos tileset
+    const townPath = this.add.tileSprite(townX + 40, townY, 200, 160, 'tileset_stone');
+    townPath.setOrigin(0, 0);
+    townPath.setDepth(0);
 
     // Building 1 (left)
     graphics.fillStyle(0x8d6e63, 1);
@@ -165,18 +155,11 @@ export default class GameScene extends Phaser.Scene {
       graphics.fillRect(farmX + 280, farmY + (i * 32), 12, 4);
     }
 
-    // Path from town to farm
-    graphics.fillStyle(0x9e9e9e, 1);
-    graphics.fillRect(240, 240, 16, 80);
-    graphics.fillRect(240, 320, 260, 16);
-
-    // Path stones
-    graphics.fillStyle(0x757575, 1);
-    for (let i = 0; i < 40; i++) {
-      const px = 240 + Math.random() * 260;
-      const py = 240 + Math.random() * 96;
-      graphics.fillRect(px, py, 2, 2);
-    }
+    // Path from town to farm using Cainos tileset
+    const pathVertical = this.add.tileSprite(240, 240, 16, 80, 'tileset_stone');
+    pathVertical.setOrigin(0, 0);
+    const pathHorizontal = this.add.tileSprite(240, 320, 260, 16, 'tileset_stone');
+    pathHorizontal.setOrigin(0, 0);
 
     // Add some decorative flowers around the map
     const flowerColors = [0xff1744, 0xe91e63, 0x9c27b0, 0xffeb3b];
